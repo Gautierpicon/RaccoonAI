@@ -6,10 +6,9 @@ export default function Home() {
   const [response, setResponse] = useState("");
   const [loading, setLoading] = useState(false);
   const [models, setModels] = useState([]);
-  const [selectedModel, setSelectedModel] = useState("llama3.2:latest");
+  const [selectedModel, setSelectedModel] = useState("");
   const [loadingModels, setLoadingModels] = useState(false);
 
-  // Fonction pour récupérer la liste des modèles disponibles
   const fetchModels = async () => {
     setLoadingModels(true);
     try {
@@ -17,7 +16,6 @@ export default function Home() {
       const data = await res.json();
       if (data.models && Array.isArray(data.models)) {
         setModels(data.models);
-        // Sélectionner le premier modèle par défaut si disponible
         if (data.models.length > 0) {
           setSelectedModel(data.models[0].name);
         }
@@ -28,7 +26,6 @@ export default function Home() {
     setLoadingModels(false);
   };
 
-  // Charger les modèles au chargement du composant
   useEffect(() => {
     fetchModels();
   }, []);
@@ -64,7 +61,6 @@ export default function Home() {
         <h1 className="text-4xl font-bold">Raccoon.ai</h1>
       </div>
       
-      {/* Sélecteur de modèle */}
       <div className="mb-4">
         <label className="block mb-2 font-medium">Select Model:</label>
         <div className="flex items-center">
@@ -94,6 +90,9 @@ export default function Home() {
             </svg>
           </button>
         </div>
+        <p className="text-sm">
+          For more models go to: <a href="https://ollama.com/search" target="_blank" className="underline text-blue-500">https://ollama.com/search</a>
+        </p>
       </div>
 
       <textarea
@@ -105,11 +104,11 @@ export default function Home() {
       <button
         onClick={sendPrompt}
         className={`mt-2 ${
-          input.trim() === "" || loading
+          input.trim() === "" || loading || !selectedModel
             ? "bg-gray-400 cursor-not-allowed"
             : "bg-gray-700 cursor-pointer"
         } text-white p-2 rounded`}
-        disabled={input.trim() === "" || loading}
+        disabled={input.trim() === "" || loading || !selectedModel}
       >
         {loading ? "Loading..." : "Send"}
       </button>

@@ -2,25 +2,22 @@ export async function POST(request) {
   try {
     const { prompt, model } = await request.json();
     
-    if (!prompt) {
-      return new Response(JSON.stringify({ error: "Prompt requis" }), {
+    if (!prompt || !model) {
+      return new Response(JSON.stringify({ error: "Prompt and model are required" }), {
         status: 400,
         headers: { 'Content-Type': 'application/json' }
       });
     }
 
-    // Utiliser le modèle spécifié ou utiliser llama3.2:latest par défaut
-    const modelToUse = model || "llama3.2:latest";
-    
-    const ollamaResponse = await fetchOllamaResponse(prompt, modelToUse);
+    const ollamaResponse = await fetchOllamaResponse(prompt, model);
     
     return new Response(JSON.stringify({ response: ollamaResponse }), {
       status: 200,
       headers: { 'Content-Type': 'application/json' }
     });
   } catch (error) {
-    console.error("Erreur API:", error);
-    return new Response(JSON.stringify({ error: "Erreur serveur" }), {
+    console.error("API Error:", error);
+    return new Response(JSON.stringify({ error: "Server error" }), {
       status: 500,
       headers: { 'Content-Type': 'application/json' }
     });
@@ -35,11 +32,11 @@ async function fetchOllamaResponse(prompt, model) {
   });
   
   if (!res.ok) {
-    throw new Error(`Erreur API Ollama: ${res.status}`);
+    throw new Error(`Ollama API Error: ${res.status}`);
   }
   
   if (!res.body) {
-    throw new Error("Pas de réponse de l'API.");
+    throw new Error("No response from API");
   }
   
   const reader = res.body.getReader();
