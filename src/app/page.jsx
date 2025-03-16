@@ -1,10 +1,37 @@
 "use client";
-import { useState } from "react";
+import { useState, useEffect } from "react";
 
 export default function Home() {
   const [input, setInput] = useState("");
   const [response, setResponse] = useState("");
   const [loading, setLoading] = useState(false);
+  const [models, setModels] = useState([]);
+  const [selectedModel, setSelectedModel] = useState("llama3.2:latest");
+  const [loadingModels, setLoadingModels] = useState(false);
+
+  // Fonction pour récupérer la liste des modèles disponibles
+  const fetchModels = async () => {
+    setLoadingModels(true);
+    try {
+      const res = await fetch("/api/ollama/models");
+      const data = await res.json();
+      if (data.models && Array.isArray(data.models)) {
+        setModels(data.models);
+        // Sélectionner le premier modèle par défaut si disponible
+        if (data.models.length > 0) {
+          setSelectedModel(data.models[0].name);
+        }
+      }
+    } catch (error) {
+      console.error("Error fetching models:", error);
+    }
+    setLoadingModels(false);
+  };
+
+  // Charger les modèles au chargement du composant
+  useEffect(() => {
+    fetchModels();
+  }, []);
 
   const sendPrompt = async () => {
     setLoading(true);
@@ -14,7 +41,10 @@ export default function Home() {
       const res = await fetch("/api/ollama", {
         method: "POST",
         headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({ prompt: input }),
+        body: JSON.stringify({ 
+          prompt: input,
+          model: selectedModel
+        }),
       });
 
       const data = await res.json();
@@ -30,9 +60,42 @@ export default function Home() {
   return (
     <div className="p-4 max-w-md mx-auto">
       <div className="flex items-center mb-4">
-        <img src="/logo.svg" alt="Logo" className="h-10 w-10 mr-2" />
-        <h1 className="text-3xl font-bold">Raccoon.ai</h1>
+        <img src="/logo.svg" alt="Logo" className="h-12 w-12 mr-2" />
+        <h1 className="text-4xl font-bold">Raccoon.ai</h1>
       </div>
+      
+      {/* Sélecteur de modèle */}
+      <div className="mb-4">
+        <label className="block mb-2 font-medium">Select Model:</label>
+        <div className="flex items-center">
+          <select
+            value={selectedModel}
+            onChange={(e) => setSelectedModel(e.target.value)}
+            className="border p-2 flex-grow"
+            disabled={loadingModels}
+          >
+            {loadingModels ? (
+              <option>Loading models...</option>
+            ) : (
+              models.map((model) => (
+                <option key={model.name} value={model.name}>
+                  {model.name}
+                </option>
+              ))
+            )}
+          </select>
+          <button
+            onClick={fetchModels}
+            className="ml-2 bg-gray-200 p-2 rounded cursor-pointer"
+            title="Refresh models"
+          >
+            <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" strokeWidth="1.5" stroke="currentColor" className="size-6">
+              <path strokeLinecap="round" strokeLinejoin="round" d="M16.023 9.348h4.992v-.001M2.985 19.644v-4.992m0 0h4.992m-4.993 0 3.181 3.183a8.25 8.25 0 0 0 13.803-3.7M4.031 9.865a8.25 8.25 0 0 1 13.803-3.7l3.181 3.182m0-4.991v4.99" />
+            </svg>
+          </button>
+        </div>
+      </div>
+
       <textarea
         value={input}
         onChange={(e) => setInput(e.target.value)}
