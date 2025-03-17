@@ -9,6 +9,7 @@ export default function Home() {
   const [selectedModel, setSelectedModel] = useState("");
   const [loadingModels, setLoadingModels] = useState(false);
   const [currentResponse, setCurrentResponse] = useState("");
+  const [firstTokenReceived, setFirstTokenReceived] = useState(false);
 
   const fetchModels = async () => {
     setLoadingModels(true);
@@ -35,6 +36,7 @@ export default function Home() {
     if (input.trim() === "") return;
     
     setLoading(true);
+    setFirstTokenReceived(false); // Réinitialiser l'état du premier token
     
     // Add user message to conversation
     const userMessage = { role: "user", content: input };
@@ -101,6 +103,11 @@ export default function Home() {
                     };
                     return updated;
                   });
+
+                  // Marquer que le premier token a été reçu
+                  if (!firstTokenReceived) {
+                    setFirstTokenReceived(true);
+                  }
                 }
                 
                 if (eventData.error) {
@@ -197,7 +204,7 @@ export default function Home() {
             <div className="pl-2">{message.content}</div>
           </div>
         ))}
-        {loading && <div className="text-gray-500">Loading...</div>}
+        {loading && !firstTokenReceived && <div className="text-gray-500">Loading...</div>}
       </div>
 
       {/* Input and Buttons */}
@@ -219,7 +226,7 @@ export default function Home() {
             } text-white p-2 rounded`}
             disabled={input.trim() === "" || loading || !selectedModel}
           >
-            {loading ? "Loading..." : "Send"}
+            Send
           </button>
           <button
             onClick={clearConversation}
