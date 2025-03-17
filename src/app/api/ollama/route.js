@@ -1,6 +1,6 @@
 export async function POST(request) {
   try {
-    const { prompt, model } = await request.json();
+    const { prompt, model, conversation } = await request.json();
     
     if (!prompt || !model) {
       return new Response(JSON.stringify({ error: "Prompt and model are required" }), {
@@ -15,7 +15,7 @@ export async function POST(request) {
     const encoder = new TextEncoder();
 
     // Lancer le traitement de la réponse d'Ollama en arrière-plan
-    fetchOllamaResponseStreaming(prompt, model, writer, encoder);
+    fetchOllamaResponseStreaming(prompt, model, conversation, writer, encoder);
     
     return new Response(stream.readable, {
       headers: { 'Content-Type': 'text/event-stream' }
@@ -29,12 +29,22 @@ export async function POST(request) {
   }
 }
 
-async function fetchOllamaResponseStreaming(prompt, model, writer, encoder) {
+async function fetchOllamaResponseStreaming(prompt, model, conversation, writer, encoder) {
   try {
-    const res = await fetch("http://localhost:11434/api/generate", {
+    // Format the conversation history for Ollama
+    const messages = conversation ? conversation.map(msg => ({
+      role: msg.role,
+      content: msg.content
+    })) : [{ role: "user", content: prompt }];
+
+    const res = await fetch("http://localhost:11434/api/chat", {
       method: "POST",
       headers: { "Content-Type": "application/json" },
-      body: JSON.stringify({ model, prompt }),
+      body: JSON.stringify({ 
+        model, 
+        messages,
+        stream: true
+      }),
     });
     
     if (!res.ok) {
@@ -63,11 +73,11 @@ async function fetchOllamaResponseStreaming(prompt, model, writer, encoder) {
         
         try {
           const data = JSON.parse(line);
-          if (data.response) {
-            // Envoyer chaque token au client
-            await writer.write(encoder.encode(`data: ${JSON.stringify({ token: data.response })}\n\n`));
+          // In chat API, the response is in message.content rather than response
+          if (data.message?.content) {
+            await writer.write(encoder.encode(`data: ${JSON.stringify({ token: data.message.content })}\n\n`));
           }
-          // Si c'est la fin de la réponse
+          // If it's the end of the response
           if (data.done) {
             await writer.write(encoder.encode(`data: ${JSON.stringify({ done: true })}\n\n`));
           }

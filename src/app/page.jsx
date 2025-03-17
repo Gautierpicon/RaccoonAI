@@ -3,11 +3,12 @@ import { useState, useEffect } from "react";
 
 export default function Home() {
   const [input, setInput] = useState("");
-  const [response, setResponse] = useState("");
+  const [conversation, setConversation] = useState([]);
   const [loading, setLoading] = useState(false);
   const [models, setModels] = useState([]);
   const [selectedModel, setSelectedModel] = useState("");
   const [loadingModels, setLoadingModels] = useState(false);
+  const [currentResponse, setCurrentResponse] = useState("");
 
   const fetchModels = async () => {
     setLoadingModels(true);
@@ -31,25 +32,43 @@ export default function Home() {
   }, []);
 
   const sendPrompt = async () => {
+    if (input.trim() === "") return;
+    
     setLoading(true);
-    setResponse("");
-
+    
+    // Add user message to conversation
+    const userMessage = { role: "user", content: input };
+    setConversation(prev => [...prev, userMessage]);
+    
+    // Clear input field and response
+    setInput("");
+    setCurrentResponse("");
+    
     try {
+      // Get the full conversation history
+      const history = [...conversation, userMessage];
+      
       const res = await fetch("/api/ollama", {
         method: "POST",
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify({ 
           prompt: input,
-          model: selectedModel
+          model: selectedModel,
+          conversation: history.map(msg => ({
+            role: msg.role,
+            content: msg.content
+          }))
         }),
       });
 
-      // Vérifier que nous avons bien un flux SSE
+      // Handle streaming response
       if (res.headers.get('Content-Type') === 'text/event-stream') {
-        // Configurer la lecture du flux des données
         const reader = res.body.getReader();
         const decoder = new TextDecoder();
         let buffer = "";
+
+        // Add placeholder for the assistant's response
+        setConversation(prev => [...prev, { role: "assistant", content: "" }]);
 
         while (true) {
           const { done, value } = await reader.read();
@@ -58,11 +77,9 @@ export default function Home() {
             break;
           }
           
-          // Décoder les données reçues
           const chunk = decoder.decode(value);
           buffer += chunk;
           
-          // Traiter les événements SSE complets
           const lines = buffer.split('\n\n');
           buffer = lines.pop() || "";
           
@@ -72,17 +89,35 @@ export default function Home() {
                 const eventData = JSON.parse(line.slice(6));
                 
                 if (eventData.token) {
-                  // Ajouter le token à la réponse
-                  setResponse(prev => prev + eventData.token);
+                  // Update the current response
+                  setCurrentResponse(prev => prev + eventData.token);
+                  
+                  // Update the conversation array
+                  setConversation(prev => {
+                    const updated = [...prev];
+                    updated[updated.length - 1] = { 
+                      role: "assistant", 
+                      content: updated[updated.length - 1].content + eventData.token 
+                    };
+                    return updated;
+                  });
                 }
                 
                 if (eventData.error) {
                   console.error("Stream error:", eventData.error);
-                  setResponse(prev => prev + "\nError: " + eventData.error);
+                  setCurrentResponse("Error: " + eventData.error);
+                  setConversation(prev => {
+                    const updated = [...prev];
+                    updated[updated.length - 1] = { 
+                      role: "assistant", 
+                      content: "Error: " + eventData.error 
+                    };
+                    return updated;
+                  });
                 }
                 
                 if (eventData.done) {
-                  // Fin de la génération
+                  // Conversation complete
                   break;
                 }
               } catch (e) {
@@ -92,16 +127,24 @@ export default function Home() {
           }
         }
       } else {
-        // Fallback si ce n'est pas un flux SSE
+        // Fallback for non-streaming responses
         const data = await res.json();
-        setResponse(data.response || "No response.");
+        const responseText = data.response || "No response.";
+        setCurrentResponse(responseText);
+        setConversation(prev => [...prev, { role: "assistant", content: responseText }]);
       }
     } catch (error) {
       console.error("Error:", error);
-      setResponse("Error during data recovery.");
+      setCurrentResponse("Error during data recovery.");
+      setConversation(prev => [...prev, { role: "assistant", content: "Error during data recovery." }]);
     }
 
     setLoading(false);
+  };
+
+  const clearConversation = () => {
+    setConversation([]);
+    setCurrentResponse("");
   };
 
   return (
@@ -117,8 +160,8 @@ export default function Home() {
           <select
             value={selectedModel}
             onChange={(e) => setSelectedModel(e.target.value)}
-            className="border p-2 flex-grow"
-            disabled={loadingModels}
+            className={`border p-2 flex-grow ${conversation.length > 0 ? "cursor-not-allowed bg-gray-100" : ""}`}
+            disabled={loadingModels || conversation.length > 0}
           >
             {loadingModels ? (
               <option>Loading models...</option>
@@ -132,8 +175,9 @@ export default function Home() {
           </select>
           <button
             onClick={fetchModels}
-            className="ml-2 bg-gray-200 p-2 rounded cursor-pointer"
+            className={`ml-2 bg-gray-200 p-2 rounded ${conversation.length > 0 ? "cursor-not-allowed opacity-50" : "cursor-pointer"}`}
             title="Refresh models"
+            disabled={conversation.length > 0}
           >
             <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" strokeWidth="1.5" stroke="currentColor" className="size-6">
               <path strokeLinecap="round" strokeLinejoin="round" d="M16.023 9.348h4.992v-.001M2.985 19.644v-4.992m0 0h4.992m-4.993 0 3.181 3.183a8.25 8.25 0 0 0 13.803-3.7M4.031 9.865a8.25 8.25 0 0 1 13.803-3.7l3.181 3.182m0-4.991v4.99" />
@@ -145,25 +189,50 @@ export default function Home() {
         </p>
       </div>
 
-      <textarea
-        value={input}
-        onChange={(e) => setInput(e.target.value)}
-        className="border p-2 w-full h-32"
-        placeholder="Enter your prompt..."
-      />
-      <button
-        onClick={sendPrompt}
-        className={`mt-2 ${
-          input.trim() === "" || loading || !selectedModel
-            ? "bg-gray-400 cursor-not-allowed"
-            : "bg-gray-700 cursor-pointer"
-        } text-white p-2 rounded`}
-        disabled={input.trim() === "" || loading || !selectedModel}
-      >
-        {loading ? "Loading..." : "Send"}
-      </button>
-      <div className="mt-4 p-2 border bg-gray-100 min-h-[100px] whitespace-pre-wrap">
-        {response}
+      {/* Conversation Display */}
+      <div className="mb-4 border bg-gray-100 p-2 h-64 overflow-y-auto whitespace-pre-wrap">
+        {conversation.map((message, index) => (
+          <div key={index} className="mb-2">
+            <div className="font-bold">{message.role === "user" ? "You:" : "AI:"}</div>
+            <div className="pl-2">{message.content}</div>
+          </div>
+        ))}
+        {loading && <div className="text-gray-500">Loading...</div>}
+      </div>
+
+      {/* Input and Buttons */}
+      <div>
+        <textarea
+          value={input}
+          onChange={(e) => setInput(e.target.value)}
+          className="border p-2 w-full h-32"
+          placeholder="Enter your prompt..."
+          disabled={loading}
+        />
+        <div className="flex mt-2 space-x-2">
+          <button
+            onClick={sendPrompt}
+            className={`flex-grow ${
+              input.trim() === "" || loading || !selectedModel
+                ? "bg-gray-400 cursor-not-allowed"
+                : "bg-gray-700 cursor-pointer"
+            } text-white p-2 rounded`}
+            disabled={input.trim() === "" || loading || !selectedModel}
+          >
+            {loading ? "Loading..." : "Send"}
+          </button>
+          <button
+            onClick={clearConversation}
+            className={`bg-red-500 text-white p-2 rounded ${
+              conversation.length === 0 || loading
+                ? "opacity-50 cursor-not-allowed"
+                : "cursor-pointer"
+            }`}
+            disabled={conversation.length === 0 || loading}
+          >
+            Clear
+          </button>
+        </div>
       </div>
     </div>
   );
