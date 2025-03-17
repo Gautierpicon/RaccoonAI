@@ -44,8 +44,58 @@ export default function Home() {
         }),
       });
 
-      const data = await res.json();
-      setResponse(data.response || "No response.");
+      // Vérifier que nous avons bien un flux SSE
+      if (res.headers.get('Content-Type') === 'text/event-stream') {
+        // Configurer la lecture du flux des données
+        const reader = res.body.getReader();
+        const decoder = new TextDecoder();
+        let buffer = "";
+
+        while (true) {
+          const { done, value } = await reader.read();
+          
+          if (done) {
+            break;
+          }
+          
+          // Décoder les données reçues
+          const chunk = decoder.decode(value);
+          buffer += chunk;
+          
+          // Traiter les événements SSE complets
+          const lines = buffer.split('\n\n');
+          buffer = lines.pop() || "";
+          
+          for (const line of lines) {
+            if (line.startsWith('data: ')) {
+              try {
+                const eventData = JSON.parse(line.slice(6));
+                
+                if (eventData.token) {
+                  // Ajouter le token à la réponse
+                  setResponse(prev => prev + eventData.token);
+                }
+                
+                if (eventData.error) {
+                  console.error("Stream error:", eventData.error);
+                  setResponse(prev => prev + "\nError: " + eventData.error);
+                }
+                
+                if (eventData.done) {
+                  // Fin de la génération
+                  break;
+                }
+              } catch (e) {
+                console.error("Error parsing SSE data:", e);
+              }
+            }
+          }
+        }
+      } else {
+        // Fallback si ce n'est pas un flux SSE
+        const data = await res.json();
+        setResponse(data.response || "No response.");
+      }
     } catch (error) {
       console.error("Error:", error);
       setResponse("Error during data recovery.");
