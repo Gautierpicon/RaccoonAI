@@ -96,11 +96,10 @@ export default function Home() {
                 const eventData = JSON.parse(line.slice(6));
                 
                 if (eventData.token) {
-                  // Update the current response while preserving model info
                   setConversation(prev => {
                     const updated = [...prev];
                     updated[updated.length - 1] = { 
-                      ...updated[updated.length - 1], // Keep existing model
+                      ...updated[updated.length - 1],
                       content: updated[updated.length - 1].content + eventData.token 
                     };
                     return updated;
