@@ -202,9 +202,6 @@ export default function Home() {
         {/* Conversation */}
         <div className="mb-6 bg-gray-200/50 backdrop-blur-sm rounded-xl border border-gray-300 shadow-lg overflow-hidden">
           <div className="h-96 overflow-y-auto p-4 space-y-4 relative">
-            <div className="absolute inset-0 opacity-10 z-0 bg-repeat bg-[length:100px_100px]" 
-                style={{backgroundImage: 'url("/paw-pattern.svg")'}}></div>
-
             {conversation.map((message, index) => (
               <div key={index} className={`flex ${message.role === 'user' ? 'justify-end' : 'justify-start'} relative z-10`}>
                 <div className={`max-w-[85%] p-4 rounded-2xl ${
