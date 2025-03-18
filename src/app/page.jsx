@@ -181,32 +181,34 @@ export default function Home() {
         </div>
 
         {/* Model selection section */}
-        <div className="mb-6 bg-gray-200/50 backdrop-blur-sm p-4 rounded-xl border border-gray-300 shadow-lg">
-          <div className="flex items-center space-x-3">
-            <select
-              value={selectedModel}
-              onChange={(e) => setSelectedModel(e.target.value)}
-              className="flex-grow bg-gray-300 text-gray-900 px-4 py-3 rounded-lg border border-gray-400 focus:outline-none focus:border-amber-500 focus:ring-2 focus:ring-amber-500/30 font-mono transition-all"
-            >
-              {models.map((model) => (
-                <option key={model.name} value={model.name} className="bg-gray-200">
-                  {model.name}
-                </option>
-              ))}
-            </select>
-            <button
-              onClick={fetchModels}
-              className="p-3 bg-gray-300 rounded-lg transition-colors duration-200 border border-gray-400 cursor-pointer aspect-square h-[48.5px]"
-            >
-              <svg className="w-6 h-6 text-gray-900" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M4 4v5h.582m15.356 2A8.001 8.001 0 004.582 9m0 0H9m11 11v-5h-.581m0 0a8.003 8.003 0 01-15.357-2m15.357 2H15"/>
-              </svg>
-            </button>
+        {conversation.length === 0 && (
+          <div className="mb-6 bg-gray-200/50 backdrop-blur-sm p-4 rounded-xl border border-gray-300 shadow-lg">
+            <div className="flex items-center space-x-3">
+              <select
+                value={selectedModel}
+                onChange={(e) => setSelectedModel(e.target.value)}
+                className="flex-grow bg-gray-300 text-gray-900 px-4 py-3 rounded-lg border border-gray-400 focus:outline-none focus:border-amber-500 focus:ring-2 focus:ring-amber-500/30 font-mono transition-all"
+              >
+                {models.map((model) => (
+                  <option key={model.name} value={model.name} className="bg-gray-200">
+                    {model.name}
+                  </option>
+                ))}
+              </select>
+              <button
+                onClick={fetchModels}
+                className="p-3 bg-gray-300 rounded-lg transition-colors duration-200 border border-gray-400 cursor-pointer aspect-square h-[48.5px]"
+              >
+                <svg className="w-6 h-6 text-gray-900" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M4 4v5h.582m15.356 2A8.001 8.001 0 004.582 9m0 0H9m11 11v-5h-.581m0 0a8.003 8.003 0 01-15.357-2m15.357 2H15"/>
+                </svg>
+              </button>
+            </div>
+            <p className="text-sm pl-2 py-1">
+              For more models go to: <a href="https://ollama.com/search" target="_blank" className="underline text-blue-500">https://ollama.com/search</a>
+            </p>
           </div>
-          <p className="text-sm pl-2 py-1">
-            For more models go to: <a href="https://ollama.com/search" target="_blank" className="underline text-blue-500">https://ollama.com/search</a>
-          </p>
-        </div>
+        )}
 
         {/* Conversation display */}
         {conversation.length > 0 && (
