@@ -9,7 +9,6 @@ export default function Home() {
   const [selectedModel, setSelectedModel] = useState("");
   const [loadingModels, setLoadingModels] = useState(false);
   const [currentResponse, setCurrentResponse] = useState("");
-  const [firstTokenReceived, setFirstTokenReceived] = useState(false);
 
   // Fetch available models from API
   const fetchModels = async () => {
@@ -39,7 +38,6 @@ export default function Home() {
     if (input.trim() === "") return;
     
     setLoading(true);
-    setFirstTokenReceived(false);
     
     // Add user message to conversation
     const userMessage = { role: "user", content: input };
@@ -107,10 +105,6 @@ export default function Home() {
                     };
                     return updated;
                   });
-
-                  if (!firstTokenReceived) {
-                    setFirstTokenReceived(true);
-                  }
                 }
                 
                 if (eventData.error) {
