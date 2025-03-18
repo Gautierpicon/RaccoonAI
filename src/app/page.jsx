@@ -36,7 +36,7 @@ export default function Home() {
     if (input.trim() === "") return;
     
     setLoading(true);
-    setFirstTokenReceived(false); // Réinitialiser l'état du premier token
+    setFirstTokenReceived(false);
     
     // Add user message to conversation
     const userMessage = { role: "user", content: input };
@@ -104,7 +104,7 @@ export default function Home() {
                     return updated;
                   });
 
-                  // Marquer que le premier token a été reçu
+                  // Mark that the first token has been received
                   if (!firstTokenReceived) {
                     setFirstTokenReceived(true);
                   }
@@ -124,7 +124,6 @@ export default function Home() {
                 }
                 
                 if (eventData.done) {
-                  // Conversation complete
                   break;
                 }
               } catch (e) {
@@ -155,90 +154,120 @@ export default function Home() {
   };
 
   return (
-    <div className="p-4 max-w-md mx-auto">
-      <div className="flex items-center mb-4">
-        <img src="/logo.svg" alt="Logo" className="h-12 w-12 mr-2" />
-        <h1 className="text-4xl font-bold">Raccoon.ai</h1>
-      </div>
-      
-      <div className="mb-4">
-        <label className="block mb-2 font-medium">Select Model:</label>
-        <div className="flex items-center">
-          <select
-            value={selectedModel}
-            onChange={(e) => setSelectedModel(e.target.value)}
-            className={`border p-2 flex-grow ${conversation.length > 0 ? "cursor-not-allowed bg-gray-100" : ""}`}
-            disabled={loadingModels || conversation.length > 0}
-          >
-            {loadingModels ? (
-              <option>Loading models...</option>
-            ) : (
-              models.map((model) => (
-                <option key={model.name} value={model.name}>
+    <div className="min-h-screen bg-gradient-to-br from-gray-100 via-gray-200 to-gray-100">
+      <div className="p-4 max-w-2xl mx-auto relative">
+        {/* Header */}
+        <div className="flex items-center mb-8 group">
+          <div className="relative h-16 w-16 mr-3">
+            <div className="absolute inset-0 rounded-full animate-pulse opacity-20"></div>
+            <img 
+              src="/logo.svg"
+              alt="Raccoon.ai Logo" 
+              className="h-16 w-16 transform transition-transform duration-300 hover:rotate-20"
+            />
+          </div>
+          <h1 className="text-4xl font-bold bg-clip-text text-transparent bg-amber-500">
+            Raccoon.ai
+          </h1>
+        </div>
+
+        {/* Model selection */}
+        <div className="mb-6 bg-gray-200/50 backdrop-blur-sm p-4 rounded-xl border border-gray-300 shadow-lg">
+          <div className="flex items-center space-x-3">
+            <select
+              value={selectedModel}
+              onChange={(e) => setSelectedModel(e.target.value)}
+              className="flex-grow bg-gray-300 text-gray-900 px-4 py-3 rounded-lg border border-gray-400 focus:outline-none focus:border-amber-500 focus:ring-2 focus:ring-amber-500/30 font-mono transition-all"
+            >
+              {models.map((model) => (
+                <option key={model.name} value={model.name} className="bg-gray-200">
                   {model.name}
                 </option>
-              ))
-            )}
-          </select>
-          <button
-            onClick={fetchModels}
-            className={`ml-2 bg-gray-200 p-2 rounded ${conversation.length > 0 ? "cursor-not-allowed opacity-50" : "cursor-pointer"}`}
-            title="Refresh models"
-            disabled={conversation.length > 0}
-          >
-            <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" strokeWidth="1.5" stroke="currentColor" className="size-6">
-              <path strokeLinecap="round" strokeLinejoin="round" d="M16.023 9.348h4.992v-.001M2.985 19.644v-4.992m0 0h4.992m-4.993 0 3.181 3.183a8.25 8.25 0 0 0 13.803-3.7M4.031 9.865a8.25 8.25 0 0 1 13.803-3.7l3.181 3.182m0-4.991v4.99" />
-            </svg>
-          </button>
-        </div>
-        <p className="text-sm">
-          For more models go to: <a href="https://ollama.com/search" target="_blank" className="underline text-blue-500">https://ollama.com/search</a>
-        </p>
-      </div>
-
-      {/* Conversation Display */}
-      <div className="mb-4 border bg-gray-100 p-2 h-64 overflow-y-auto whitespace-pre-wrap">
-        {conversation.map((message, index) => (
-          <div key={index} className="mb-2">
-            <div className="font-bold">{message.role === "user" ? "You:" : "AI:"}</div>
-            <div className="pl-2">{message.content}</div>
+              ))}
+            </select>
+            <button
+              onClick={fetchModels}
+              className="p-3 bg-gray-300 rounded-lg transition-colors duration-200 border border-gray-400 cursor-pointer aspect-square h-[48.5px]"
+            >
+              <svg className="w-6 h-6 text-gray-900" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M4 4v5h.582m15.356 2A8.001 8.001 0 004.582 9m0 0H9m11 11v-5h-.581m0 0a8.003 8.003 0 01-15.357-2m15.357 2H15"/>
+              </svg>
+            </button>
           </div>
-        ))}
-        {loading && !firstTokenReceived && <div className="text-gray-500">Loading...</div>}
-      </div>
+          <p className="text-sm pl-2 py-1">
+            For more models go to: <a href="https://ollama.com/search" target="_blank" className="underline text-blue-500">https://ollama.com/search</a>
+          </p>
+        </div>
 
-      {/* Input and Buttons */}
-      <div>
-        <textarea
-          value={input}
-          onChange={(e) => setInput(e.target.value)}
-          className="border p-2 w-full h-32"
-          placeholder="Enter your prompt..."
-          disabled={loading}
-        />
-        <div className="flex mt-2 space-x-2">
-          <button
-            onClick={sendPrompt}
-            className={`flex-grow ${
-              input.trim() === "" || loading || !selectedModel
-                ? "bg-gray-400 cursor-not-allowed"
-                : "bg-gray-700 cursor-pointer"
-            } text-white p-2 rounded`}
-            disabled={input.trim() === "" || loading || !selectedModel}
-          >
-            Send
-          </button>
-          <button
-            onClick={clearConversation}
-            className={`bg-red-500 text-white p-2 rounded ${
-              conversation.length === 0 || loading
-                ? "opacity-50 cursor-not-allowed"
-                : "cursor-pointer"
-            }`}
-            disabled={conversation.length === 0 || loading}
-          >
-            Clear
-          </button>
+        {/* Conversation */}
+        <div className="mb-6 bg-gray-200/50 backdrop-blur-sm rounded-xl border border-gray-300 shadow-lg overflow-hidden">
+          <div className="h-96 overflow-y-auto p-4 space-y-4 relative">
+            <div className="absolute inset-0 opacity-10 z-0 bg-repeat bg-[length:100px_100px]" 
+                style={{backgroundImage: 'url("/paw-pattern.svg")'}}></div>
+
+            {conversation.map((message, index) => (
+              <div key={index} className={`flex ${message.role === 'user' ? 'justify-end' : 'justify-start'} relative z-10`}>
+                <div className={`max-w-[85%] p-4 rounded-2xl ${
+                  message.role === 'user' 
+                    ? 'bg-amber-600/30 border border-amber-600/50' 
+                    : 'bg-gray-300/70 border border-gray-400/50'
+                } shadow-md transition-transform duration-200 hover:scale-[1.01]`}>
+                  <div className="flex items-start space-x-3">
+                    {message.role === 'assistant' && (
+                      <div className="pt-1">
+                        <div className="w-8 h-8 bg-amber-500/20 rounded-full flex items-center justify-center">
+                          <img 
+                            src="/aipicture.png"
+                            alt="Ai logo" 
+                            className="h-7 w-7"
+                          />
+                        </div>
+                      </div>
+                    )}
+                    <div className="flex-1 text-amber-950 font-light whitespace-pre-wrap">
+                      {message.content}
+                    </div>
+                  </div>
+                </div>
+              </div>
+            ))}
+          </div>
+        </div>
+
+        {/* Input area */}
+        <div className="bg-gray-200/50 px-4 pt-4 pb-2 backdrop-blur-sm rounded-xl border border-gray-300 shadow-lg group focus-within:border-amber-500 focus-within:ring-2 focus-within:ring-amber-500/30 transition-all duration-200">
+          <div className="relative">
+            <textarea
+              value={input}
+              onChange={(e) => setInput(e.target.value)}
+              onKeyPress={(e) => e.key === 'Enter' && !e.shiftKey && sendPrompt()}
+              className="w-full pb-10 bg-gray-300/50 text-gray-900 p-4 pr-32 rounded-lg border border-gray-300 focus:outline-none placeholder-gray-400 resize-none transition-all duration-200"
+              placeholder="Write your message... 🍃"
+              rows="3"
+              disabled={loading}
+            />
+            <div className="absolute right-4 bottom-4 flex space-x-2">
+              <button
+                onClick={clearConversation}
+                className="p-2 px-3 duration-200 transform hover:scale-105 bg-red-400/30 text-red-800 rounded-full flex items-center"
+              >
+                Clear
+              </button>
+              <button
+                onClick={sendPrompt}
+                className={`p-2 rounded-full ${
+                  input.trim() && !loading 
+                    ? 'bg-amber-500 hover:bg-amber-400 text-gray-100' 
+                    : 'bg-gray-400 cursor-not-allowed text-gray-600'
+                } transition-all duration-200 transform hover:scale-105 aspect-square`}
+                disabled={!input.trim() || loading}
+              >
+                <svg className="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M12 19l9 2-9-18-9 18 9-2zm0 0v-8"/>
+                </svg>
+              </button>
+            </div>
+          </div>
         </div>
       </div>
     </div>
