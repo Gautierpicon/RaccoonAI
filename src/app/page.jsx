@@ -11,6 +11,7 @@ export default function Home() {
   const [currentResponse, setCurrentResponse] = useState("");
   const [firstTokenReceived, setFirstTokenReceived] = useState(false);
 
+  // Fetch available models from API
   const fetchModels = async () => {
     setLoadingModels(true);
     try {
@@ -28,10 +29,12 @@ export default function Home() {
     setLoadingModels(false);
   };
 
+  // Load models on initial mount
   useEffect(() => {
     fetchModels();
   }, []);
 
+  // Handle prompt submission
   const sendPrompt = async () => {
     if (input.trim() === "") return;
     
@@ -69,8 +72,12 @@ export default function Home() {
         const decoder = new TextDecoder();
         let buffer = "";
 
-        // Add placeholder for the assistant's response
-        setConversation(prev => [...prev, { role: "assistant", content: "" }]);
+        // Add placeholder for the assistant's response with model info
+        setConversation(prev => [...prev, { 
+          role: "assistant", 
+          content: "",
+          model: selectedModel 
+        }]);
 
         while (true) {
           const { done, value } = await reader.read();
@@ -91,20 +98,16 @@ export default function Home() {
                 const eventData = JSON.parse(line.slice(6));
                 
                 if (eventData.token) {
-                  // Update the current response
-                  setCurrentResponse(prev => prev + eventData.token);
-                  
-                  // Update the conversation array
+                  // Update the current response while preserving model info
                   setConversation(prev => {
                     const updated = [...prev];
                     updated[updated.length - 1] = { 
-                      role: "assistant", 
+                      ...updated[updated.length - 1], // Keep existing model
                       content: updated[updated.length - 1].content + eventData.token 
                     };
                     return updated;
                   });
 
-                  // Mark that the first token has been received
                   if (!firstTokenReceived) {
                     setFirstTokenReceived(true);
                   }
@@ -112,11 +115,10 @@ export default function Home() {
                 
                 if (eventData.error) {
                   console.error("Stream error:", eventData.error);
-                  setCurrentResponse("Error: " + eventData.error);
                   setConversation(prev => {
                     const updated = [...prev];
                     updated[updated.length - 1] = { 
-                      role: "assistant", 
+                      ...updated[updated.length - 1],
                       content: "Error: " + eventData.error 
                     };
                     return updated;
@@ -133,21 +135,28 @@ export default function Home() {
           }
         }
       } else {
-        // Fallback for non-streaming responses
+        // Fallback for non-streaming responses with model info
         const data = await res.json();
         const responseText = data.response || "No response.";
-        setCurrentResponse(responseText);
-        setConversation(prev => [...prev, { role: "assistant", content: responseText }]);
+        setConversation(prev => [...prev, { 
+          role: "assistant", 
+          content: responseText,
+          model: selectedModel 
+        }]);
       }
     } catch (error) {
       console.error("Error:", error);
-      setCurrentResponse("Error during data recovery.");
-      setConversation(prev => [...prev, { role: "assistant", content: "Error during data recovery." }]);
+      setConversation(prev => [...prev, { 
+        role: "assistant", 
+        content: "Error during data recovery.",
+        model: selectedModel 
+      }]);
     }
 
     setLoading(false);
   };
 
+  // Clear conversation history
   const clearConversation = () => {
     setConversation([]);
     setCurrentResponse("");
@@ -156,7 +165,7 @@ export default function Home() {
   return (
     <div className="min-h-screen bg-gradient-to-br from-gray-100 via-gray-200 to-gray-100">
       <div className="p-4 max-w-2xl mx-auto relative">
-        {/* Header */}
+        {/* Header with animated logo */}
         <div className="flex items-center mb-8 group">
           <div className="relative h-16 w-16 mr-3">
             <div className="absolute inset-0 rounded-full animate-pulse opacity-20"></div>
@@ -171,7 +180,7 @@ export default function Home() {
           </h1>
         </div>
 
-        {/* Model selection */}
+        {/* Model selection section */}
         <div className="mb-6 bg-gray-200/50 backdrop-blur-sm p-4 rounded-xl border border-gray-300 shadow-lg">
           <div className="flex items-center space-x-3">
             <select
@@ -199,39 +208,47 @@ export default function Home() {
           </p>
         </div>
 
-        {/* Conversation */}
-        <div className="mb-6 bg-gray-200/50 backdrop-blur-sm rounded-xl border border-gray-300 shadow-lg overflow-hidden">
-          <div className="h-96 overflow-y-auto p-4 space-y-4 relative">
-            {conversation.map((message, index) => (
-              <div key={index} className={`flex ${message.role === 'user' ? 'justify-end' : 'justify-start'} relative z-10`}>
-                <div className={`max-w-[85%] p-4 rounded-2xl ${
-                  message.role === 'user' 
-                    ? 'bg-amber-600/30 border border-amber-600/50' 
-                    : 'bg-gray-300/70 border border-gray-400/50'
-                } shadow-md transition-transform duration-200 hover:scale-[1.01]`}>
-                  <div className="flex items-start space-x-3">
-                    {message.role === 'assistant' && (
-                      <div className="pt-1">
-                        <div className="w-8 h-8 bg-amber-500/20 rounded-full flex items-center justify-center">
-                          <img 
-                            src="/aipicture.png"
-                            alt="Ai logo" 
-                            className="h-7 w-7"
-                          />
+        {/* Conversation display */}
+        {conversation.length > 0 && (
+          <div className="mb-6 bg-gray-200/50 backdrop-blur-sm rounded-xl border border-gray-300 shadow-lg overflow-hidden">
+            <div className="h-96 overflow-y-auto p-4 space-y-4 relative">
+              {conversation.map((message, index) => (
+                <div key={index} className={`flex ${message.role === 'user' ? 'justify-end' : 'justify-start'} relative z-10`}>
+                  <div className={`max-w-[85%] p-4 rounded-2xl ${
+                    message.role === 'user' 
+                      ? 'bg-amber-600/30 border border-amber-600/50' 
+                      : 'bg-gray-300/70 border border-gray-400/50'
+                  } shadow-md transition-transform duration-200 hover:scale-[1.01]`}>
+                    <div className="flex items-start space-x-3">
+                      {message.role === 'assistant' && (
+                        <div className="pt-1">
+                          <div className="w-8 h-8 bg-amber-500/20 rounded-full flex items-center justify-center">
+                            <img 
+                              src="/aipicture.png"
+                              alt="Ai logo" 
+                              className="h-7 w-7"
+                            />
+                          </div>
                         </div>
+                      )}
+                      <div className="flex-1 text-amber-950 font-light whitespace-pre-wrap">
+                        {/* Display model name for assistant messages */}
+                        {message.role === 'assistant' && (
+                          <div className="text-sm font-medium text-amber-600 mb-1">
+                            {message.model}
+                          </div>
+                        )}
+                        {message.content}
                       </div>
-                    )}
-                    <div className="flex-1 text-amber-950 font-light whitespace-pre-wrap">
-                      {message.content}
                     </div>
                   </div>
                 </div>
-              </div>
-            ))}
+              ))}
+            </div>
           </div>
-        </div>
+        )}
 
-        {/* Input area */}
+        {/* Input area with controls */}
         <div className="bg-gray-200/50 px-4 pt-4 pb-2 backdrop-blur-sm rounded-xl border border-gray-300 shadow-lg group focus-within:border-amber-500 focus-within:ring-2 focus-within:ring-amber-500/30 transition-all duration-200">
           <div className="relative">
             <textarea
@@ -250,13 +267,16 @@ export default function Home() {
               >
                 Clear
               </button>
+
               <button
                 onClick={sendPrompt}
                 className={`p-2 rounded-full ${
-                  input.trim() && !loading 
-                    ? 'bg-amber-500 hover:bg-amber-400 text-gray-100' 
-                    : 'bg-gray-400 cursor-not-allowed text-gray-600'
-                } transition-all duration-200 transform hover:scale-105 aspect-square`}
+                  input.trim() && !loading
+                    ? 'bg-amber-500 hover:bg-amber-400 text-gray-100'
+                    : 'bg-gray-400 text-gray-600'
+                } transition-all duration-200 transform ${
+                  input.trim() && !loading ? 'hover:scale-105' : 'cursor-not-allowed'
+                } aspect-square`}
                 disabled={!input.trim() || loading}
               >
                 <svg className="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
