@@ -7,12 +7,9 @@ export default function Home() {
   const [loading, setLoading] = useState(false);
   const [models, setModels] = useState([]);
   const [selectedModel, setSelectedModel] = useState("");
-  const [loadingModels, setLoadingModels] = useState(false);
-  const [currentResponse, setCurrentResponse] = useState("");
 
   // Fetch available models from API
   const fetchModels = async () => {
-    setLoadingModels(true);
     try {
       const res = await fetch("/api/ollama/models");
       const data = await res.json();
@@ -25,7 +22,6 @@ export default function Home() {
     } catch (error) {
       console.error("Error fetching models:", error);
     }
-    setLoadingModels(false);
   };
 
   // Load models on initial mount
@@ -43,9 +39,8 @@ export default function Home() {
     const userMessage = { role: "user", content: input };
     setConversation(prev => [...prev, userMessage]);
     
-    // Clear input field and response
+    // Clear input field
     setInput("");
-    setCurrentResponse("");
     
     try {
       // Get the full conversation history
@@ -80,9 +75,7 @@ export default function Home() {
         while (true) {
           const { done, value } = await reader.read();
           
-          if (done) {
-            break;
-          }
+          if (done) break;
           
           const chunk = decoder.decode(value);
           buffer += chunk;
@@ -117,10 +110,6 @@ export default function Home() {
                     return updated;
                   });
                 }
-                
-                if (eventData.done) {
-                  break;
-                }
               } catch (e) {
                 console.error("Error parsing SSE data:", e);
               }
@@ -128,7 +117,7 @@ export default function Home() {
           }
         }
       } else {
-        // Fallback for non-streaming responses with model info
+        // Fallback for non-streaming responses
         const data = await res.json();
         const responseText = data.response || "No response.";
         setConversation(prev => [...prev, { 
@@ -152,7 +141,6 @@ export default function Home() {
   // Clear conversation history
   const clearConversation = () => {
     setConversation([]);
-    setCurrentResponse("");
   };
 
   return (
