@@ -244,12 +244,14 @@ export default function Home() {
               disabled={loading}
             />
             <div className="absolute right-4 bottom-4 flex space-x-2">
-              <button
-                onClick={clearConversation}
-                className="p-2 px-3 duration-200 transform hover:scale-105 bg-red-400/30 text-red-800 rounded-full flex items-center"
-              >
-                Clear
-              </button>
+              {conversation.length > 0 && (
+                <button
+                  onClick={clearConversation}
+                  className="p-2 px-3 duration-200 transform hover:scale-105 bg-red-400/30 text-red-800 rounded-full flex items-center"
+                >
+                  Clear
+                </button>
+              )}
 
               <button
                 onClick={sendPrompt}
