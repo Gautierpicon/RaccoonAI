@@ -1,7 +1,7 @@
 "use client";
 import { useState, useEffect } from "react";
-
 import { motion } from "framer-motion";
+
 
 export default function Home() {
   const [input, setInput] = useState("");
@@ -9,8 +9,6 @@ export default function Home() {
   const [loading, setLoading] = useState(false);
   const [models, setModels] = useState([]);
   const [selectedModel, setSelectedModel] = useState("");
-
-  const [isClicked, setIsClicked] = useState(false);
 
   // Fetch available models from API
   const fetchModels = async () => {
@@ -168,38 +166,17 @@ export default function Home() {
         {/* Model selection */}
         {conversation.length === 0 && (
           <div className="mb-6 bg-gray-200/50 backdrop-blur-sm p-4 rounded-xl border border-gray-300 shadow-lg">
-            <div className="flex items-center space-x-3">
-              <select
-                value={selectedModel}
-                onChange={(e) => setSelectedModel(e.target.value)}
-                className="flex-grow bg-gray-300 text-gray-900 px-4 py-3 rounded-lg border border-gray-400 focus:outline-none focus:border-amber-500 focus:ring-2 focus:ring-amber-500/30 font-mono transition-all"
-              >
-                {models.map((model) => (
-                  <option key={model.name} value={model.name} className="bg-gray-200">
-                    {model.name}
-                  </option>
-                ))}
-              </select>
-              <motion.button
-                onClick={() => {
-                  fetchModels();
-                  setIsClicked(true);
-                  setTimeout(() => setIsClicked(false), 300);
-                }}
-                animate={{
-                  borderColor: isClicked ? "rgb(245 158 11)" : "rgb(156 163 175)", // Amber-500 ↔ Gray-400
-                  boxShadow: isClicked
-                    ? "0 0 8px rgba(245, 158, 11, 0.5)" // Amber-500/30
-                    : "none",
-                }}
-                transition={{ duration: 0.2, ease: "easeOut" }}
-                className="p-3 bg-gray-300 rounded-lg transition-colors duration-200 border border-gray-400 cursor-pointer aspect-square h-[48.5px] hover:border-amber-500"
-              >
-                <svg className="w-6 h-6 text-gray-900" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M4 4v5h.582m15.356 2A8.001 8.001 0 004.582 9m0 0H9m11 11v-5h-.581m0 0a8.003 8.003 0 01-15.357-2m15.357 2H15"/>
-                </svg>
-              </motion.button>
-            </div>
+            <select
+              value={selectedModel}
+              onChange={(e) => setSelectedModel(e.target.value)}
+              className="w-full bg-gray-300 text-gray-900 px-4 py-3 rounded-lg border border-gray-400 focus:outline-none focus:border-amber-500 focus:ring-2 focus:ring-amber-500/30 font-mono transition-all"
+            >
+              {models.map((model) => (
+                <option key={model.name} value={model.name} className="bg-gray-200">
+                  {model.name}
+                </option>
+              ))}
+            </select>
             <p className="text-sm pl-2 py-1">
               For more models go to: <a href="https://ollama.com/search" target="_blank" className="underline text-blue-500">https://ollama.com/search</a>
             </p>
