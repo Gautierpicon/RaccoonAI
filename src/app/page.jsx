@@ -1,7 +1,9 @@
 "use client";
 import { useState, useEffect } from "react";
-import { motion } from "framer-motion";
-
+import Header from '../components/Header';
+import ModelSelector from '../components/ModelSelector';
+import Conversation from '../components/Conversation';
+import InputArea from '../components/InputArea';
 
 export default function Home() {
   const [input, setInput] = useState("");
@@ -10,7 +12,6 @@ export default function Home() {
   const [models, setModels] = useState([]);
   const [selectedModel, setSelectedModel] = useState("");
 
-  // Fetch available models from API
   const fetchModels = async () => {
     try {
       const res = await fetch("/api/ollama/models");
@@ -26,26 +27,19 @@ export default function Home() {
     }
   };
 
-  // Load models on initial mount
   useEffect(() => {
     fetchModels();
   }, []);
 
-  // Handle prompt submission
   const sendPrompt = async () => {
     if (input.trim() === "") return;
     
     setLoading(true);
-    
-    // Add user message to conversation
     const userMessage = { role: "user", content: input };
     setConversation(prev => [...prev, userMessage]);
-    
-    // Clear input field
     setInput("");
-    
+
     try {
-      // Get the full conversation history
       const history = [...conversation, userMessage];
       
       const res = await fetch("/api/ollama", {
@@ -61,25 +55,25 @@ export default function Home() {
         }),
       });
 
-      // Handle streaming response
       if (res.headers.get('Content-Type') === 'text/event-stream') {
         const reader = res.body.getReader();
         const decoder = new TextDecoder();
         let buffer = "";
 
-        // Add placeholder for the assistant's response with model info
+        // Ajoute un message assistant unique avec un ID
+        const assistantId = Date.now();
         setConversation(prev => [...prev, { 
           role: "assistant", 
           content: "",
-          model: selectedModel 
+          model: selectedModel,
+          id: assistantId // Identifiant unique
         }]);
 
         while (true) {
           const { done, value } = await reader.read();
-          
           if (done) break;
           
-          const chunk = decoder.decode(value);
+          const chunk = decoder.decode(value, { stream: true });
           buffer += chunk;
           
           const lines = buffer.split('\n\n');
@@ -92,24 +86,32 @@ export default function Home() {
                 
                 if (eventData.token) {
                   setConversation(prev => {
-                    const updated = [...prev];
-                    updated[updated.length - 1] = { 
-                      ...updated[updated.length - 1],
-                      content: updated[updated.length - 1].content + eventData.token 
-                    };
-                    return updated;
+                    const lastMessage = prev[prev.length - 1];
+                    // Vérifie l'ID et crée un nouvel objet pour éviter la mutation
+                    if (lastMessage.id === assistantId) {
+                      return [
+                        ...prev.slice(0, -1),
+                        {
+                          ...lastMessage,
+                          content: lastMessage.content + eventData.token
+                        }
+                      ];
+                    }
+                    return prev;
                   });
                 }
                 
                 if (eventData.error) {
                   console.error("Stream error:", eventData.error);
                   setConversation(prev => {
-                    const updated = [...prev];
-                    updated[updated.length - 1] = { 
-                      ...updated[updated.length - 1],
-                      content: "Error: " + eventData.error 
-                    };
-                    return updated;
+                    const lastMessage = prev[prev.length - 1];
+                    return [
+                      ...prev.slice(0, -1),
+                      {
+                        ...lastMessage,
+                        content: "Error: " + eventData.error
+                      }
+                    ];
                   });
                 }
               } catch (e) {
@@ -119,7 +121,6 @@ export default function Home() {
           }
         }
       } else {
-        // Fallback for non-streaming responses
         const data = await res.json();
         const responseText = data.response || "No response.";
         setConversation(prev => [...prev, { 
@@ -140,7 +141,6 @@ export default function Home() {
     setLoading(false);
   };
 
-  // Clear conversation history
   const clearConversation = () => {
     setConversation([]);
   };
@@ -148,121 +148,26 @@ export default function Home() {
   return (
     <div className="min-h-screen bg-gradient-to-br from-gray-100 via-gray-200 to-gray-100">
       <div className="p-4 max-w-2xl mx-auto relative">
-        {/* Header */}
-        <div className="flex items-center mb-8 group">
-          <div className="relative h-16 w-16 mr-3">
-            <div className="absolute inset-0 rounded-full animate-pulse opacity-20"></div>
-            <img 
-              src="/logo.svg"
-              alt="Raccoon.ai Logo" 
-              className="h-16 w-16 transform transition-transform duration-300 hover:rotate-20"
-            />
-          </div>
-          <h1 className="text-4xl font-bold bg-clip-text text-transparent bg-amber-500">
-            Raccoon.ai
-          </h1>
-        </div>
-
-        {/* Model selection */}
+        <Header />
+        
         {conversation.length === 0 && (
-          <div className="mb-6 bg-gray-200/50 backdrop-blur-sm p-4 rounded-xl border border-gray-300 shadow-lg">
-            <select
-              value={selectedModel}
-              onChange={(e) => setSelectedModel(e.target.value)}
-              className="w-full bg-gray-300 text-gray-900 px-4 py-3 rounded-lg border border-gray-400 focus:outline-none focus:border-amber-500 focus:ring-2 focus:ring-amber-500/30 font-mono transition-all"
-            >
-              {models.map((model) => (
-                <option key={model.name} value={model.name} className="bg-gray-200">
-                  {model.name}
-                </option>
-              ))}
-            </select>
-            <p className="text-sm pl-2 py-1">
-              For more models go to: <a href="https://ollama.com/search" target="_blank" className="underline text-blue-500">https://ollama.com/search</a>
-            </p>
-          </div>
+          <ModelSelector 
+            models={models}
+            selectedModel={selectedModel}
+            onModelChange={setSelectedModel}
+          />
         )}
 
-        {/* Conversation display */}
-        {conversation.length > 0 && (
-          <div className="mb-6 bg-gray-200/50 backdrop-blur-sm rounded-xl border border-gray-300 shadow-lg overflow-hidden">
-            <div className="h-96 overflow-y-auto p-4 space-y-4 relative">
-              {conversation.map((message, index) => (
-                <div key={index} className={`flex ${message.role === 'user' ? 'justify-end' : 'justify-start'} relative z-10`}>
-                  <div className={`max-w-[85%] p-4 rounded-2xl ${
-                    message.role === 'user' 
-                      ? 'bg-amber-600/30 border border-amber-600/50' 
-                      : 'bg-gray-300/70 border border-gray-400/50'
-                  } shadow-md transition-transform duration-200 hover:scale-[1.01]`}>
-                    <div className="flex items-start space-x-3">
-                      {message.role === 'assistant' && (
-                        <div className="pt-1">
-                          <div className="w-8 h-8 bg-amber-500/20 rounded-full flex items-center justify-center">
-                            <img 
-                              src="/aipicture.png"
-                              alt="Ai logo" 
-                              className="h-7 w-7"
-                            />
-                          </div>
-                        </div>
-                      )}
-                      <div className="flex-1 text-amber-950 font-light whitespace-pre-wrap">
-                        {/* Display model name for assistant messages */}
-                        {message.role === 'assistant' && (
-                          <div className="text-sm font-medium text-amber-600 mb-1">
-                            {message.model}
-                          </div>
-                        )}
-                        {message.content}
-                      </div>
-                    </div>
-                  </div>
-                </div>
-              ))}
-            </div>
-          </div>
-        )}
+        {conversation.length > 0 && <Conversation conversation={conversation} />}
 
-        {/* Input area with controls */}
-        <div className="bg-gray-200/50 px-4 pt-4 pb-2 backdrop-blur-sm rounded-xl border border-gray-300 shadow-lg group focus-within:border-amber-500 focus-within:ring-2 focus-within:ring-amber-500/30 transition-all duration-200">
-          <div className="relative">
-            <textarea
-              value={input}
-              onChange={(e) => setInput(e.target.value)}
-              onKeyPress={(e) => e.key === 'Enter' && !e.shiftKey && sendPrompt()}
-              className="w-full pb-10 bg-gray-300/50 text-gray-900 p-4 pr-32 rounded-lg border border-gray-300 focus:outline-none placeholder-gray-400 resize-none transition-all duration-200"
-              placeholder="Write your message... 🍃"
-              rows="3"
-              disabled={loading}
-            />
-            <div className="absolute right-4 bottom-4 flex space-x-2">
-              {conversation.length > 0 && (
-                <button
-                  onClick={clearConversation}
-                  className="p-2 px-3 duration-200 transform hover:scale-105 bg-red-400/30 text-red-800 rounded-full flex items-center"
-                >
-                  Clear
-                </button>
-              )}
-
-              <button
-                onClick={sendPrompt}
-                className={`p-2 rounded-full ${
-                  input.trim() && !loading
-                    ? 'bg-amber-500 hover:bg-amber-400 text-gray-100'
-                    : 'bg-gray-400 text-gray-600'
-                } transition-all duration-200 transform ${
-                  input.trim() && !loading ? 'hover:scale-105' : 'cursor-not-allowed'
-                } aspect-square`}
-                disabled={!input.trim() || loading}
-              >
-                <svg className="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M12 19l9 2-9-18-9 18 9-2zm0 0v-8"/>
-                </svg>
-              </button>
-            </div>
-          </div>
-        </div>
+        <InputArea
+          input={input}
+          loading={loading}
+          conversation={conversation}
+          onInputChange={(e) => setInput(e.target.value)}
+          onSend={sendPrompt}
+          onClear={clearConversation}
+        />
       </div>
     </div>
   );
