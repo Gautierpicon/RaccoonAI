@@ -3,7 +3,7 @@ export default function Message({ message }) {
       if (model.toLowerCase().includes("llama")) return "/AiIcons/llama.webp";
       if (model.toLowerCase().includes("deepseek")) return "/AiIcons/deepseek.webp";
       if (model.toLowerCase().includes("gemma3")) return "/AiIcons/gemma.webp";
-      if (model.toLowerCase().includes("qwen")) return "/AiIcons/qwen.webp";
+      if (model.toLowerCase().includes("qwen") || model.toLowerCase().includes("qwq")) return "/AiIcons/qwen.webp";
       if (model.toLowerCase().includes("mistral")) return "/AiIcons/mistral.webp";
       return "/logo.svg";
     };
