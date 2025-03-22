@@ -13,7 +13,7 @@ export default function ModelSelector({ models, selectedModel, onModelChange }) 
           ))}
         </select>
         <p className="text-sm pl-1 py-1">
-          For more models go to: <a href="https://ollama.com/search" target="_blank" className="underline text-emerald-800 hover:text-emerald-700">https://ollama.com/search</a>
+          For more models go to: <a href="https://ollama.com/search" rel="noopener noreferrer" target="_blank" className="underline text-emerald-800 hover:text-emerald-700">https://ollama.com/search</a>
         </p>
       </div>
     );
