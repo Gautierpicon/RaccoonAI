@@ -9,7 +9,7 @@ export default function Header() {
                         className="h-16 w-16 transform transition-transform duration-300 group-hover:rotate-20"
                     />
                 </div>
-                <h1 className="bricolage-font text-4xl bg-clip-text text-amber-500 group-hover:underline">
+                <h1 className="bricolage-font text-4xl bg-clip-text text-emerald-700 group-hover:underline">
                     Raccoon.ai
                 </h1>
             </a>

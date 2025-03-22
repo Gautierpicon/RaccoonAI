@@ -7,7 +7,7 @@ export default function InputArea({
     onClear
   }) {
     return (
-      <div className="bg-gray-200/50 px-4 pt-4 pb-2 backdrop-blur-sm rounded-xl border border-gray-300 shadow-lg group focus-within:border-amber-500 focus-within:ring-2 focus-within:ring-amber-500/30 transition-all duration-200">
+      <div className="bg-gray-200/50 px-4 pt-4 pb-2 backdrop-blur-sm rounded-xl border border-gray-300 shadow-lg group focus-within:border-emerald-700 focus-within:ring-2 focus-within:ring-emerald-700/30 transition-all duration-200">
         <div className="relative">
           <textarea
             value={input}
@@ -32,7 +32,7 @@ export default function InputArea({
               onClick={onSend}
               className={`p-2 rounded-full ${
                 input.trim() && !loading
-                  ? 'bg-amber-500 hover:bg-amber-400 text-amber-200'
+                  ? 'bg-green-600/40 text-emerald-800'
                   : 'bg-gray-400 text-gray-600'
               } transition-all duration-200 transform ${
                 input.trim() && !loading ? 'hover:scale-105' : 'cursor-not-allowed'
