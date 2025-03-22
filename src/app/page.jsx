@@ -146,7 +146,10 @@ export default function Home() {
   return (
     <div className="min-h-screen bg-gradient-to-br from-gray-100 via-gray-200 to-gray-100">
       <div className="p-4 max-w-3xl mx-auto relative">
-        <Header />
+      <Header 
+        conversation={conversation} 
+        onClear={clearConversation}
+      />
         
         {conversation.length === 0 && (
           <ModelSelector 
