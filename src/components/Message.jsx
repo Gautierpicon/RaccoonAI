@@ -9,16 +9,16 @@ export default function Message({ message }) {
           <div className="flex items-start space-x-3">
             {message.role === 'assistant' && (
               <div className="pt-1">
-                <div className="w-8 h-8 bg-amber-500/20 rounded-full flex items-center justify-center">
+                <div className="w-10 h-10 bg-amber-500/20 rounded-full flex items-center justify-center">
                   <img 
                     src="/aipicture.png"
                     alt="Ai logo" 
-                    className="h-7 w-7"
+                    className="h-full w-full object-contain p-1"
                   />
                 </div>
               </div>
             )}
-            <div className="flex-1 text-amber-950 font-light whitespace-pre-line break-all min-w-0">
+            <div className="flex-1 text-amber-950 font-light whitespace-pre-line break-words min-w-0">
               {message.role === 'assistant' && (
                 <div className="text-sm font-medium text-amber-600 mb-1">
                   {message.model}
