@@ -27,7 +27,7 @@ Because raccoons are cuts aren't they?
 - 📋 Persistent conversation history
 - 🧠 Model selection from those available in your Ollama installation
 
-### Future Plans:
+### Future Plans
 - 📝 Support for Markdown rendering from different AI models
 - 🌗 Light, Dark, and System color modes
 - 💾 Saving past conversations and navigating through them via a scrollable menu
