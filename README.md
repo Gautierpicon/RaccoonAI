@@ -26,7 +26,6 @@ Because raccoons are cuts aren't they?
 - 🔄 Streaming support for real-time responses
 - 📋 Persistent conversation history
 - 🧠 Model selection from those available in your Ollama installation
-- 🌐 Local API for communicating with Ollama
 
 ### Future Plans:
 - 📝 Support for Markdown rendering from different AI models
