@@ -4,6 +4,7 @@ import Header from '../components/Header';
 import ModelSelector from '../components/ModelSelector';
 import Conversation from '../components/Conversation';
 import InputArea from '../components/InputArea';
+import Footer from '../components/Footer';
 
 export default function Home() {
   const [input, setInput] = useState("");
@@ -144,13 +145,13 @@ export default function Home() {
   };
 
   return (
-    <div className="min-h-screen bg-gradient-to-br from-gray-100 via-gray-200 to-gray-100">
-      <div className="p-4 max-w-3xl mx-auto relative">
-      <Header 
-        conversation={conversation} 
-        onClear={clearConversation}
-      />
-        
+    <div className="min-h-screen bg-gray-200">
+      <div className="p-4 max-w-3xl mx-auto relative pb-16">
+        <Header 
+          conversation={conversation} 
+          onClear={clearConversation}
+        />
+          
         {conversation.length === 0 && (
           <ModelSelector 
             models={models}
@@ -170,6 +171,8 @@ export default function Home() {
           onClear={clearConversation}
         />
       </div>
+      
+      {conversation.length === 0 && <Footer />}
     </div>
   );
 }
