@@ -5,7 +5,7 @@ export default function Message({ message }) {
       if (model.toLowerCase().includes("gemma3")) return "/AiIcons/gemma.webp";
       if (model.toLowerCase().includes("qwen")) return "/AiIcons/qwen.webp";
       if (model.toLowerCase().includes("mistral")) return "/AiIcons/mistral.webp";
-      return "/AiIcons/default.png";
+      return "/logo.svg";
     };
   
     return (
