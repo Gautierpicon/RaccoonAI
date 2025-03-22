@@ -60,13 +60,12 @@ export default function Home() {
         const decoder = new TextDecoder();
         let buffer = "";
 
-        // Ajoute un message assistant unique avec un ID
         const assistantId = Date.now();
         setConversation(prev => [...prev, { 
           role: "assistant", 
           content: "",
           model: selectedModel,
-          id: assistantId // Identifiant unique
+          id: assistantId
         }]);
 
         while (true) {
@@ -87,7 +86,6 @@ export default function Home() {
                 if (eventData.token) {
                   setConversation(prev => {
                     const lastMessage = prev[prev.length - 1];
-                    // Vérifie l'ID et crée un nouvel objet pour éviter la mutation
                     if (lastMessage.id === assistantId) {
                       return [
                         ...prev.slice(0, -1),
@@ -147,7 +145,7 @@ export default function Home() {
 
   return (
     <div className="min-h-screen bg-gradient-to-br from-gray-100 via-gray-200 to-gray-100">
-      <div className="p-4 max-w-2xl mx-auto relative">
+      <div className="p-4 max-w-3xl mx-auto relative">
         <Header />
         
         {conversation.length === 0 && (

@@ -32,7 +32,7 @@ export default function InputArea({
               onClick={onSend}
               className={`p-2 rounded-full ${
                 input.trim() && !loading
-                  ? 'bg-amber-500 hover:bg-amber-400 text-gray-100'
+                  ? 'bg-amber-500 hover:bg-amber-400 text-amber-200'
                   : 'bg-gray-400 text-gray-600'
               } transition-all duration-200 transform ${
                 input.trim() && !loading ? 'hover:scale-105' : 'cursor-not-allowed'
