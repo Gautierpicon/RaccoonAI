@@ -1,13 +1,13 @@
 export default function ModelSelector({ models, selectedModel, onModelChange }) {
     return (
-      <div className="mb-6 bg-gray-200/50 backdrop-blur-sm p-4 rounded-xl border border-gray-300 shadow-lg">
+      <div className="mb-6 bg-gray-100/50 backdrop-blur-sm p-4 rounded-xl border border-gray-200 shadow-sm">
         <select
           value={selectedModel}
           onChange={(e) => onModelChange(e.target.value)}
-          className="w-full bg-gray-300 text-gray-900 px-4 py-3 rounded-lg border border-transparent focus:outline-none focus:border-emerald-700 focus:ring-2 focus:ring-emerald-700/30 font-mono transition-all"
+          className="w-full bg-gray-200 text-gray-900 px-4 py-3 rounded-lg border border-transparent focus:outline-none focus:border-emerald-700 focus:ring-2 focus:ring-emerald-700/30 font-mono transition-all"
         >
           {models.map((model) => (
-            <option key={model.name} value={model.name} className="bg-gray-200">
+            <option key={model.name} value={model.name} className="bg-gray-100">
               {model.name}
             </option>
           ))}
