@@ -7,13 +7,13 @@ export default function InputArea({
     onClear
   }) {
     return (
-      <div className="bg-gray-200/50 px-4 pt-4 pb-2 backdrop-blur-sm rounded-xl border border-gray-300 shadow-lg group focus-within:border-emerald-700 focus-within:ring-2 focus-within:ring-emerald-700/30 transition-all duration-200">
+      <div className="bg-gray-100/50 px-4 pt-4 pb-2 backdrop-blur-sm rounded-xl border border-gray-200 shadow-lg group focus-within:border-emerald-700 focus-within:ring-2 focus-within:ring-emerald-700/30 transition-all duration-200">
         <div className="relative">
           <textarea
             value={input}
             onChange={onInputChange}
             onKeyPress={(e) => e.key === 'Enter' && !e.shiftKey && onSend()}
-            className="w-full pb-10 bg-gray-300/50 text-gray-900 p-4 pr-32 rounded-lg border border-gray-300 focus:outline-none placeholder-gray-400 resize-none transition-all duration-200"
+            className="w-full pb-10 bg-gray-200/50 text-gray-900 p-4 pr-32 rounded-lg border border-gray-200 focus:outline-none placeholder-gray-400 resize-none transition-all duration-200"
             placeholder="Write your message... 🍃"
             rows="3"
             disabled={loading}

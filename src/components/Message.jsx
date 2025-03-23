@@ -10,11 +10,11 @@ export default function Message({ message }) {
   
     return (
       <div className={`flex ${message.role === 'user' ? 'justify-end' : 'justify-start'} relative z-10`}>
-        <div className={`max-w-[85%] p-4 rounded-2xl min-w-0 ${
+        <div className={`max-w-[85%] rounded-2xl min-w-0 ${
           message.role === 'user' 
-            ? 'bg-gray-300/70 border border-gray-400/50'
-            : 'bg-green-600/30 border border-emerald-700'
-        } shadow-md transition-transform duration-200 hover:scale-[1.01]`}>
+            ? 'bg-green-600/30 shadow-md px-4 py-2'
+            : 'bg-transparent transition-transform duration-200 p-4 my-8'
+          }`}>
           <div className="flex items-start space-x-3">
             {message.role === 'assistant' && (
               <div className="pt-1">
@@ -33,7 +33,9 @@ export default function Message({ message }) {
                   {message.model}
                 </div>
               )}
-              {message.content}
+              <div className="text-xl">
+                {message.content}
+              </div>
             </div>
           </div>
         </div>
