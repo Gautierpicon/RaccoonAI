@@ -7,7 +7,7 @@ export default function InputArea({
     onClear
   }) {
     return (
-      <div className="bg-gray-100/50 px-4 pt-4 pb-2 backdrop-blur-sm rounded-xl border border-gray-200 shadow-lg group focus-within:border-emerald-700 focus-within:ring-2 focus-within:ring-emerald-700/30 transition-all duration-200">
+      <div className="px-4 pt-4 pb-2 rounded-xl border-gray-200 shadow-lg group focus-within:border-emerald-700 focus-within:ring-2 focus-within:ring-emerald-700/30 transition-all duration-200">
         <div className="relative">
           <textarea
             value={input}

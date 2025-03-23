@@ -12,18 +12,18 @@ export default function Message({ message }) {
       <div className={`flex ${message.role === 'user' ? 'justify-end' : 'justify-start'} relative z-10`}>
         <div className={`max-w-[85%] rounded-2xl min-w-0 ${
           message.role === 'user' 
-            ? 'bg-green-600/30 shadow-md px-4 py-2'
+            ? 'bg-green-600/30 shadow-sm px-4 py-2'
             : 'bg-transparent transition-transform duration-200 p-4 my-8'
           }`}>
           <div className="flex items-start space-x-3">
             {message.role === 'assistant' && (
               <div className="pt-1">
                 <div className="w-11 h-11 bg-green-500/20 rounded-full flex items-center justify-center overflow-hidden">
-                    <img 
-                        src={getIconForModel(message.model)}
-                        alt={`${message.model} icon`}
-                        className="object-contain w-full h-full"
-                    />
+                  <img 
+                    src={getIconForModel(message.model)}
+                    alt={`${message.model} icon`}
+                    className="object-contain w-full h-full"
+                  />
                 </div>
               </div>
             )}

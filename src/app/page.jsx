@@ -145,8 +145,8 @@ export default function Home() {
   };
 
   return (
-    <div className="min-h-screen bg-gray-100">
-      <div className="p-4 max-w-3xl mx-auto relative pb-16">
+    <div className="min-h-screen bg-gray-100 pb-[180px]">
+      <div className="p-4 max-w-3xl mx-auto relative">
         <Header 
           conversation={conversation} 
           onClear={clearConversation}
@@ -162,14 +162,20 @@ export default function Home() {
 
         {conversation.length > 0 && <Conversation conversation={conversation} />}
 
-        <InputArea
-          input={input}
-          loading={loading}
-          conversation={conversation}
-          onInputChange={(e) => setInput(e.target.value)}
-          onSend={sendPrompt}
-          onClear={clearConversation}
-        />
+        <div className={`${
+          conversation.length === 0
+            ? ''
+            : 'fixed bottom-0 left-0 right-0 max-w-3xl mx-auto p-4'
+          }`}>
+          <InputArea
+            input={input}
+            loading={loading}
+            conversation={conversation}
+            onInputChange={(e) => setInput(e.target.value)}
+            onSend={sendPrompt}
+            onClear={clearConversation}
+          />
+        </div>
       </div>
       
       {conversation.length === 0 && <Footer />}
