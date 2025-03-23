@@ -12,11 +12,21 @@ export default function InputArea({
           <textarea
             value={input}
             onChange={onInputChange}
-            onKeyPress={(e) => e.key === 'Enter' && !e.shiftKey && onSend()}
-            className="w-full pb-10 bg-gray-200/50 text-gray-900 p-4 pr-32 rounded-lg border border-gray-200 focus:outline-none placeholder-gray-400 resize-none transition-all duration-200"
+            onKeyDown={(e) => {
+              if (e.key === 'Enter' && !e.shiftKey) {
+                e.preventDefault();
+                if (!loading && input.trim()) {
+                  onSend();
+                }
+              }
+            }}
+            className="w-full pb-10 bg-gray-200/75 text-gray-900 p-4 pr-32 rounded-lg border border-gray-200 focus:outline-none placeholder-gray-400 resize-none transition-all duration-200"
             placeholder="Write your message... 🍃"
-            rows="3"
-            disabled={loading}
+            rows={`${
+              conversation.length === 0
+                ? '3'
+                : '2'
+              }`}
           />
           <div className="absolute right-4 bottom-4 flex space-x-2">
             {conversation.length > 0 && (
