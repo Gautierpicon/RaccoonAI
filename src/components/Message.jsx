@@ -12,8 +12,8 @@ export default function Message({ message }) {
       <div className={`flex ${message.role === 'user' ? 'justify-end' : 'justify-start'} relative z-10`}>
         <div className={`max-w-[85%] rounded-2xl min-w-0 ${
           message.role === 'user' 
-            ? 'bg-green-600/30 shadow-sm px-4 py-2'
-            : 'bg-transparent transition-transform duration-200 p-4 my-8'
+            ? 'max-w-[85%] bg-green-600/30 shadow-sm px-4 py-2'
+            : 'max-w-full bg-transparent transition-transform duration-200 p-4 my-8'
           }`}>
           <div className="flex items-start space-x-3">
             {message.role === 'assistant' && (
