@@ -8,9 +8,14 @@ Raccoon.ai is a web user interface for Ollama that allows you to leverage locall
 Because raccoons are cuts aren't they?
 
 <img
-    src="https://imgs.search.brave.com/HvotVyktUOzyZutGF2h9r4CyvWTTGCk2fLdKSJSrLc4/rs:fit:860:0:0:0/g:ce/aHR0cHM6Ly91cGxv/YWQud2lraW1lZGlh/Lm9yZy93aWtpcGVk/aWEvY29tbW9ucy84/LzhiL1Byb2N5b25f/bG90b3JfKHJhY2Nv/b24pLmpwZw"
-    alt="A cute raccoon"
-    width="250px"
+   src="https://cdn.futura-sciences.com/cdn-cgi/image/width=1024,quality=50,format=auto/sources/images/alexander-raton-laveur.jpeg"
+   alt="A cute raccoon"
+   width="250px"
+/>
+<img
+   src="https://img.lovepik.com/photo/60161/1744.jpg_wh860.jpg"
+   alt="A cute raccoon"
+   width="250px"
 />
 
 ## Features
