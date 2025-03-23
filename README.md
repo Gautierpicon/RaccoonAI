@@ -36,7 +36,8 @@ Because raccoons are cuts aren't they?
 - 📝 Support for Markdown rendering from different AI models
 - 🌗 Light, Dark, and System color modes
 - 💾 Saving past conversations and navigating through them via a scrollable menu
-- 🔄📂 Ability to import and export conversations to, for example, store them on a USB drive and use them on different devices. Ideal for data security.
+- 🔄 Ability to import and export conversations to, for example, store them on a USB drive and use them on different devices. Ideal for data security.
+- 📂 Import files in conversations like images or pdf (only for multimodal models like [Gemma 3](https://ollama.com/library/gemma3))
 
 ## Prerequisites
 - [Node.js](https://nodejs.org/) (v18 or higher)
