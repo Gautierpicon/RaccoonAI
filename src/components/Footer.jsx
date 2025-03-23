@@ -1,6 +1,6 @@
 export default function Footer() {
     return (
-      <footer className="fixed bottom-0 left-0 right-0 py-2 px-4 backdrop-blur-sm border-t border-gray-300 shadow-sm">
+      <footer className="fixed bottom-0 left-0 right-0 py-2 px-4">
         <div className="container max-w-3xl mx-auto flex items-center justify-between">
           <div className="flex items-center">
             <img src="/logo.svg" alt="Raccoon.ai Logo" className="h-4 w-4 mr-2" />
