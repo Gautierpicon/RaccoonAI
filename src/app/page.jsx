@@ -162,10 +162,10 @@ export default function Home() {
 
         {conversation.length > 0 && <Conversation conversation={conversation} />}
 
-        <div className={`${
+        <div className={`z-50 bg-gray-100 ${
           conversation.length === 0
-            ? ''
-            : 'fixed bottom-0 left-0 right-0 max-w-3xl mx-auto p-4'
+            ? 'pb-4 px-4 pt-0'
+            : 'fixed bottom-0 left-0 right-0 max-w-3xl pb-2 px-4 pt-0 mx-auto'
           }`}>
           <InputArea
             input={input}
