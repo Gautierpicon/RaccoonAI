@@ -10,12 +10,12 @@ Because raccoons are cuts aren't they?
 <img
    src="https://cdn.futura-sciences.com/cdn-cgi/image/width=1024,quality=50,format=auto/sources/images/alexander-raton-laveur.jpeg"
    alt="A cute raccoon"
-   width="250px"
+   width="400px"
 />
 <img
    src="https://img.lovepik.com/photo/60161/1744.jpg_wh860.jpg"
    alt="A cute raccoon"
-   width="250px"
+   width="400px"
 />
 
 ## Features
