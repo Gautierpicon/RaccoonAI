@@ -12,7 +12,7 @@ export default function ModelSelector({ models, selectedModel, onModelChange }) 
             </option>
           ))}
         </select>
-        <p className="text-sm pl-1 py-1 text-gray-900 dark:text-zinc-200">
+        <p className="outfit-font text-sm pl-1 py-1 text-gray-900 dark:text-zinc-200">
           For more models go to: <a href="https://ollama.com/search" rel="noopener noreferrer" target="_blank" className="underline text-emerald-800 dark:text-emerald-700 hover:text-emerald-700 dark:hover:text-emerald-600">https://ollama.com/search</a>
         </p>
       </div>

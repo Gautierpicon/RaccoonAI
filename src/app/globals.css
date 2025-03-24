@@ -8,10 +8,27 @@
   font-display: swap;
 }
 
+@font-face {
+  font-family: 'Outfit';
+  src: url('/fonts/Outfit/Outfit.ttf') format('truetype');
+  font-weight: normal;
+  font-style: normal;
+  font-display: swap;
+}
+
+@font-face {
+  font-family: 'Outfit';
+  src: url('/fonts/Outfit/Outfit-Bold.ttf') format('truetype');
+  font-weight: bold;
+  font-style: normal;
+  font-display: swap;
+}
+
 :root {
   --background: #f0f4f7;
   --foreground: #171717;
   --font-bricolage: 'BricolageGrotesque', Arial, sans-serif;
+  --font-outfit: 'Outfit', Arial, sans-serif;
 }
 
 @theme inline {
@@ -20,6 +37,7 @@
   --font-sans: var(--font-geist-sans);
   --font-mono: var(--font-geist-mono);
   --font-bricolage: var(--font-bricolage);
+  --font-outfit: var(--font-outfit);
 }
 
 @media (prefers-color-scheme: dark) {
@@ -37,4 +55,8 @@ body {
 
 .bricolage-font {
   font-family: var(--font-bricolage);
+}
+
+.outfit-font {
+  font-family: var(--font-outfit);
 }

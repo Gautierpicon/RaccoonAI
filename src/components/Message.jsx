@@ -9,7 +9,7 @@ export default function Message({ message }) {
     };
   
     return (
-      <div className={`flex ${message.role === 'user' ? 'justify-end' : 'justify-start'} relative z-10`}>
+      <div className={`outfit-font flex ${message.role === 'user' ? 'justify-end' : 'justify-start'} relative z-10`}>
         <div className={`rounded-2xl min-w-0 ${
           message.role === 'user' 
             ? 'max-w-[85%] bg-green-600/30 dark:bg-green-800/70 shadow-sm px-4 py-2'
@@ -27,7 +27,7 @@ export default function Message({ message }) {
                 </div>
               </div>
             )}
-            <div className="flex-1 text-green-950 dark:text-zinc-300 font-light whitespace-pre-line break-words min-w-0">
+            <div className="flex-1 text-green-950 dark:text-zinc-300 whitespace-pre-line break-words min-w-0">
               {message.role === 'assistant' && (
                 <div className="text-sm font-medium text-emerald-800 dark:text-emerald-600 mb-1 underline">
                   {message.model}
