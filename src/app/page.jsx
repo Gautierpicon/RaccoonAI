@@ -145,7 +145,7 @@ export default function Home() {
   };
 
   return (
-    <div className="min-h-screen bg-gray-100 pb-[180px]">
+    <div className="min-h-screen bg-gray-100 dark:bg-zinc-900 pb-[180px]">
       <div className="p-4 max-w-3xl mx-auto relative">
         <Header 
           conversation={conversation} 
@@ -162,7 +162,7 @@ export default function Home() {
 
         {conversation.length > 0 && <Conversation conversation={conversation} />}
 
-        <div className={`z-50 bg-gray-100 ${
+        <div className={`z-50 bg-gray-100 dark:bg-zinc-900 ${
           conversation.length === 0
             ? 'pb-4 px-4 pt-0'
             : 'fixed bottom-0 left-0 right-0 max-w-3xl pb-2 px-4 pt-0 mx-auto'

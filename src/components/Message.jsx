@@ -12,7 +12,7 @@ export default function Message({ message }) {
       <div className={`flex ${message.role === 'user' ? 'justify-end' : 'justify-start'} relative z-10`}>
         <div className={`rounded-2xl min-w-0 ${
           message.role === 'user' 
-            ? 'max-w-[85%] bg-green-600/30 shadow-sm px-4 py-2'
+            ? 'max-w-[85%] bg-green-600/30 dark:bg-green-800/70 shadow-sm px-4 py-2'
             : 'max-w-full bg-transparent transition-transform duration-200 p-4 my-8'
           }`}>
           <div className="flex items-start space-x-3">
@@ -27,9 +27,9 @@ export default function Message({ message }) {
                 </div>
               </div>
             )}
-            <div className="flex-1 text-green-950 font-light whitespace-pre-line break-words min-w-0">
+            <div className="flex-1 text-green-950 dark:text-zinc-300 font-light whitespace-pre-line break-words min-w-0">
               {message.role === 'assistant' && (
-                <div className="text-sm font-medium text-emerald-800 mb-1 underline">
+                <div className="text-sm font-medium text-emerald-800 dark:text-emerald-600 mb-1 underline">
                   {message.model}
                 </div>
               )}

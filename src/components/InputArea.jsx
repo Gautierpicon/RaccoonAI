@@ -7,7 +7,7 @@ export default function InputArea({
     onClear
   }) {
     return (
-      <div className="px-4 pt-4 pb-2 rounded-xl border border-gray-200 shadow-md group focus-within:border-emerald-700 focus-within:ring-2 focus-within:ring-emerald-700/30 transition-all duration-200">
+      <div className="px-4 pt-4 pb-2 rounded-xl border border-gray-200 dark:border-zinc-800 shadow-md dark:shadow-zinc-800 group focus-within:border-emerald-700 focus-within:ring-2 focus-within:ring-emerald-700/30 transition-all duration-200">
         <div className="relative">
           <textarea
             value={input}
@@ -20,7 +20,7 @@ export default function InputArea({
                 }
               }
             }}
-            className="w-full pb-10 bg-gray-200/75 text-gray-900 p-4 pr-32 rounded-lg border border-gray-200 focus:outline-none placeholder-gray-400 resize-none transition-all duration-200"
+            className="w-full pb-10 bg-gray-200/75 dark:bg-zinc-800/75 text-gray-900 dark:text-zinc-300 p-4 pr-32 rounded-lg border border-gray-200 dark:border-zinc-800 focus:outline-none placeholder-gray-400 dark:placeholder-zinc-600 resize-none transition-all duration-200"
             placeholder="Write your message... 🍃"
             rows={`${
               conversation.length === 0
@@ -32,7 +32,7 @@ export default function InputArea({
             {conversation.length > 0 && (
               <button
                 onClick={onClear}
-                className="p-2 px-3 duration-200 transform hover:scale-105 bg-red-400/30 text-red-800 rounded-full flex items-center"
+                className="p-2 px-3 duration-200 transform hover:scale-105 bg-red-400/30 dark:bg-red-500/70 font-semibold text-red-800 dark:text-zinc-900 rounded-full flex items-center"
               >
                 Clear
               </button>
@@ -42,8 +42,8 @@ export default function InputArea({
               onClick={onSend}
               className={`p-2 rounded-full ${
                 input.trim() && !loading
-                  ? 'bg-green-600/40 text-emerald-800'
-                  : 'bg-gray-400 text-gray-600'
+                  ? 'bg-green-600/40 text-emerald-800 dark:text-zinc-900'
+                  : 'bg-gray-400 text-gray-600 dark:bg-zinc-700 dark:text-zinc-900'
               } transition-all duration-200 transform ${
                 input.trim() && !loading ? 'hover:scale-105' : 'cursor-not-allowed'
               } aspect-square`}
