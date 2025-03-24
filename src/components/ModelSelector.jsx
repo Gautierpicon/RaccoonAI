@@ -1,6 +1,6 @@
 export default function ModelSelector({ models, selectedModel, onModelChange }) {
     return (
-      <div className="mb-6 mx-4 bg-gray-100/50 backdrop-blur-sm p-4 rounded-xl border border-gray-200 shadow-sm">
+      <div className="mb-6 mx-4 bg-gray-100/50 backdrop-blur-sm p-4 rounded-xl border border-gray-200 shadow-md">
         <select
           value={selectedModel}
           onChange={(e) => onModelChange(e.target.value)}
