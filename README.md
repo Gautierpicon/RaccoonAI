@@ -33,11 +33,20 @@ Because raccoons are cuts aren't they?
 - 🧠 Model selection from those available in your Ollama installation
 
 ### Future Plans
+#### v1.0.0-beta
 - 📝 Support for Markdown rendering from different AI models
 - 🌗 Light, Dark, and System color modes
+#### v1.0.0
 - 💾 Saving past conversations and navigating through them via a scrollable menu
+- 📋 Possibility of copying and pasting ia answers and having them regenerated if the answer was not conclusive.
+#### v2.0.0
+- 📥 Choosing how to use Raccoon.ai:
+   - 📍 Solution 1 (current): download the project locally using GitHub (see "installation" section)
+   - 🛜 Solution 2 (future) (simpler solution but needs internet): using the hosted website (no data leaves your computer)
 - 🔄 Ability to import and export conversations to, for example, store them on a USB drive and use them on different devices. Ideal for data security.
 - 📂 Import files in conversations like images or pdf (only for multimodal models like [Gemma 3](https://ollama.com/library/gemma3))
+#### v3.0.0
+- 📱 Optimization of the interface for mobile use
 
 ## Prerequisites
 - [Node.js](https://nodejs.org/) (v18 or higher)
