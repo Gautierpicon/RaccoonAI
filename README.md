@@ -18,7 +18,7 @@ Because raccoons are cuts aren't they?
    width="400px"
 />
 
-## Features
+## features (non-exhaustive list)
 
 ### All Ollama features
 - 🚀 Local execution
@@ -40,10 +40,10 @@ Because raccoons are cuts aren't they?
 - 💾 Saving past conversations and navigating through them via a scrollable menu
 - 📋 Possibility of copying and pasting ia answers and having them regenerated if the answer was not conclusive.
 #### v2.0.0
-- 📥 Choosing how to use Raccoon.ai:
-   - 📍 Solution 1 (current):
+- 📥 Choosing how to use Raccoon.ai
+   - 📍 Solution 1 (current)
       Download the project locally using GitHub (see "installation" section)
-   - 🛜 Solution 2 (future) (simpler solution but needs internet):
+   - 🛜 Solution 2 (future) (simpler solution but needs internet)
       Using the hosted website (no data leaves your computer)
 - 🔄 Ability to import and export conversations to, for example, store them on a USB drive and use them on different devices. Ideal for data security.
 - 📂 Import files in conversations like images or pdf (only for multimodal models like [Gemma 3](https://ollama.com/library/gemma3))
