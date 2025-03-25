@@ -50,8 +50,8 @@ Because raccoons are cuts aren't they?
 - 📂 Import files in conversations like images or pdf (only for multimodal models like [Gemma 3](https://ollama.com/library/gemma3))
 #### v1.2.0
 - 📱 Optimization of the interface for mobile use
-##### Maybe
-- APIs integration for closed models
+- Maybe
+   - 🔗 APIs integration for closed models
 
 ## Prerequisites
 - [Node.js](https://nodejs.org/) (v18 or higher)
