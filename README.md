@@ -130,7 +130,6 @@ return new Response(stream.readable, {
 - **Next.js 15** - React framework
 - **React 19** - UI library
 - **Tailwind CSS** - Utility-first CSS framework
-- **Framer Motion** - Animations
 - **Server-Sent Events** - For response streaming
 
 ## Troubleshooting
