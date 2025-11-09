@@ -1,8 +1,7 @@
 "use client";
 import { useState, useEffect } from "react";
 
-export default function ModelSelector({ models, selectedModel, onModelChange, onModelsUpdate }) {
-  const [showManager, setShowManager] = useState(false);
+export default function ModelSelector({ models, selectedModel, onModelChange, onModelsUpdate, showManager, setShowManager }) {
   const [pullModel, setPullModel] = useState("");
   const [pulling, setPulling] = useState(false);
   const [pullProgress, setPullProgress] = useState("");
@@ -147,7 +146,7 @@ export default function ModelSelector({ models, selectedModel, onModelChange, on
               <button
                 onClick={handlePull}
                 disabled={pulling || !pullModel.trim()}
-                className="px-6 py-2 bg-emerald-600 text-white rounded-lg disabled:opacity-50 hover:bg-emerald-700 transition-colors outfit-font font-semibold"
+                className="px-6 py-2 bg-emerald-600 text-white rounded-lg disabled:cursor-not-allowed cursor-pointer disabled:opacity-50 hover:bg-emerald-700 transition-colors outfit-font font-semibold"
               >
                 {pulling ? "Downloading..." : "Download"}
               </button>
@@ -169,7 +168,7 @@ export default function ModelSelector({ models, selectedModel, onModelChange, on
               <h2 className="text-xl font-bold outfit-font text-emerald-700 dark:text-emerald-600">Running Models</h2>
               <button
                 onClick={fetchRunningModels}
-                className="px-3 py-1 bg-blue-600 text-white rounded-lg text-sm hover:bg-blue-700 transition-colors outfit-font"
+                className="cursor-pointer px-3 py-1 bg-blue-600 text-white rounded-lg text-sm hover:bg-blue-700 transition-colors outfit-font"
               >
                 Refresh
               </button>
@@ -199,7 +198,7 @@ export default function ModelSelector({ models, selectedModel, onModelChange, on
                   </div>
                   <button
                     onClick={() => handleDelete(model.name)}
-                    className="px-3 py-1 bg-red-600 text-white rounded text-sm hover:bg-red-700 transition-colors outfit-font ml-2"
+                    className="cursor-pointer px-3 py-1 bg-red-600 text-white rounded text-sm hover:bg-red-700 transition-colors outfit-font ml-2"
                   >
                     Delete
                   </button>

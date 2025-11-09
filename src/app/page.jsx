@@ -12,6 +12,7 @@ export default function Home() {
   const [loading, setLoading] = useState(false);
   const [models, setModels] = useState([]);
   const [selectedModel, setSelectedModel] = useState("");
+  const [showManager, setShowManager] = useState(false);
 
   const fetchModels = async () => {
     try {
@@ -162,25 +163,29 @@ export default function Home() {
             selectedModel={selectedModel}
             onModelChange={setSelectedModel}
             onModelsUpdate={handleModelsUpdate}
+            showManager={showManager}
+            setShowManager={setShowManager}
           />
         )}
 
         {conversation.length > 0 && <Conversation conversation={conversation} />}
 
-        <div className={`z-50 bg-gray-100 dark:bg-zinc-900 ${
-          conversation.length === 0
-            ? 'pb-4 px-4 pt-0'
-            : 'fixed bottom-0 left-0 right-0 max-w-3xl pb-2 px-4 pt-0 mx-auto'
-          }`}>
-          <InputArea
-            input={input}
-            loading={loading}
-            conversation={conversation}
-            onInputChange={(e) => setInput(e.target.value)}
-            onSend={sendPrompt}
-            onClear={clearConversation}
-          />
-        </div>
+        {!showManager && (
+          <div className={`z-50 bg-gray-100 dark:bg-zinc-900 ${
+            conversation.length === 0
+              ? 'pb-4 px-4 pt-0'
+              : 'fixed bottom-0 left-0 right-0 max-w-3xl pb-2 px-4 pt-0 mx-auto'
+            }`}>
+            <InputArea
+              input={input}
+              loading={loading}
+              conversation={conversation}
+              onInputChange={(e) => setInput(e.target.value)}
+              onSend={sendPrompt}
+              onClear={clearConversation}
+            />
+          </div>
+        )}
       </div>
       
       {conversation.length === 0 && <Footer />}
