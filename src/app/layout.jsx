@@ -12,8 +12,8 @@ const geistMono = Geist_Mono({
 });
 
 export const metadata = {
-  title: "Raccoon.ai",
-  description: "Use Raccoon.ai with Ollama to benefit from a user interface that lets you exploit your artificial intelligence locally.",
+  title: "RaccoonAI",
+  description: "Use RaccoonAI with Ollama to benefit from a user interface that lets you exploit your artificial intelligence locally.",
 };
 
 export default function RootLayout({ children }) {

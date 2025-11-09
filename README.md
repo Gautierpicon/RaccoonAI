@@ -1,9 +1,9 @@
-# Raccoon.ai [![License: GPL v3](https://img.shields.io/badge/License-GPLv3-blue.svg)](https://www.gnu.org/licenses/gpl-3.0)
+# RaccoonAI [![License: GPL v3](https://img.shields.io/badge/License-GPLv3-blue.svg)](https://www.gnu.org/licenses/gpl-3.0)
 
-![Raccoon.ai Logo](/public/logo.svg)
+![RaccoonAI Logo](/public/logo.svg)
 
 ## Description
-Raccoon.ai is a web user interface for Ollama that allows you to leverage locally-run artificial intelligence models. This application offers an intuitive user experience for interacting with Large Language Models (LLMs) running on your own machine via Ollama.
+RaccoonAI is a web user interface for Ollama that allows you to leverage locally-run artificial intelligence models. This application offers an intuitive user experience for interacting with Large Language Models (LLMs) running on your own machine via Ollama.
 
 ### Why 'Raccoon'?
 Because raccoons are cuts aren't they?
@@ -45,7 +45,7 @@ Because raccoons are cuts aren't they?
 - 💾 Saving past conversations and navigating through them via a scrollable menu
 - 📋 Possibility of copying and pasting ia answers and having them regenerated if the answer was not conclusive.
 #### v1.1.0
-- 📥 Choosing how to use Raccoon.ai
+- 📥 Choosing how to use RaccoonAI
    - 📍 Solution 1 (current)
       Download the project locally using GitHub (see "installation" section)
    - 🛜 Solution 2 (future) (simpler solution but needs internet)
@@ -59,7 +59,7 @@ Because raccoons are cuts aren't they?
 
 ## Prerequisites
 - [Node.js](https://nodejs.org/) (v18 or higher)
-- [Ollama](https://ollama.ai/) installed
+- [Ollama](https://ollamaAI/) installed
 
 ## Installation
 1. Start the Ollama server
@@ -87,7 +87,7 @@ Because raccoons are cuts aren't they?
 
 ## API Architecture
 ### Communication with Ollama
-Raccoon.ai communicates with Ollama via two main API endpoints:
+RaccoonAI communicates with Ollama via two main API endpoints:
 
 1. **`/api/ollama/models`** - Retrieves the list of available models
    - Method: `GET`

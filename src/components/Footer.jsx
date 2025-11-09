@@ -3,8 +3,8 @@ export default function Footer() {
       <footer className="fixed bottom-0 left-0 right-0 py-2 px-4">
         <div className="container max-w-3xl mx-auto flex items-center justify-between">
           <div className="flex items-center">
-            <img src="/logo.svg" alt="Raccoon.ai Logo" className="h-4 w-4 mr-2" />
-            <span className="bricolage-font text-emerald-700 dark:text-emerald-600 text-xs">Raccoon.ai</span>
+            <img src="/logo.svg" alt="RaccoonAI Logo" className="h-4 w-4 mr-2" />
+            <span className="bricolage-font text-emerald-700 dark:text-emerald-600 text-xs">RaccoonAI</span>
           </div>
           
           <div className="flex items-center space-x-4 text-xs text-emerald-700 dark:text-emerald-600">
