@@ -19,7 +19,7 @@ export default function Home() {
       const data = await res.json();
       if (data.models && Array.isArray(data.models)) {
         setModels(data.models);
-        if (data.models.length > 0) {
+        if (data.models.length > 0 && !selectedModel) {
           setSelectedModel(data.models[0].name);
         }
       }
@@ -144,6 +144,10 @@ export default function Home() {
     setConversation([]);
   };
 
+  const handleModelsUpdate = () => {
+    fetchModels();
+  };
+
   return (
     <div className="min-h-screen bg-gray-100 dark:bg-zinc-900 pb-[180px]">
       <div className="p-4 max-w-3xl mx-auto relative">
@@ -157,6 +161,7 @@ export default function Home() {
             models={models}
             selectedModel={selectedModel}
             onModelChange={setSelectedModel}
+            onModelsUpdate={handleModelsUpdate}
           />
         )}
 

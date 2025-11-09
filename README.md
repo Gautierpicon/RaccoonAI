@@ -15,11 +15,11 @@ Because raccoons are cuts aren't they?
 />
 <img
    src="https://img.lovepik.com/photo/60161/1744.jpg_wh860.jpg"
-   alt="A cute raccoon"
+   alt="Another cute raccoon"
    width="400px"
 />
 
-## features (non-exhaustive list)
+## features
 
 ### All Ollama features
 - 🚀 Local execution
@@ -31,7 +31,11 @@ Because raccoons are cuts aren't they?
 ### Currently present
 - 🔄 Streaming support for real-time responses
 - 📋 Persistent conversation history
-- 🧠 Model selection from those available in your Ollama installation
+- 🧠 Manage models :
+   - Select the model you wish to use
+   - Download an AI model 
+   - Delete an AI model
+   - View running Models
 
 ### Future Plans
 #### v1.0.0-beta
