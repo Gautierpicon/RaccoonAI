@@ -120,8 +120,8 @@ const response = await ollama.list();
    "prompt": "Your message",
    "model": "model-name",
    "conversation": [
-   { "role": "user", "content": "Previous message" },
-   { "role": "assistant", "content": "Previous response" }
+      { "role": "user", "content": "Previous message" },
+      { "role": "assistant", "content": "Previous response" }
    ]
 }
 ```
