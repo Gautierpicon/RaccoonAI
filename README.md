@@ -86,44 +86,101 @@ Because raccoons are cuts aren't they?
 5. Open your browser at [http://localhost:3000](http://localhost:3000)
 
 ## API Architecture
-### Communication with Ollama
-RaccoonAI communicates with Ollama via two main API endpoints:
+### Ollama JavaScript Library Integration
+RaccoonAI uses the official [Ollama JavaScript library](https://github.com/ollama/ollama-js) for seamless communication with your local Ollama instance.
 
-1. **`/api/ollama/models`** - Retrieves the list of available models
-   - Method: `GET`
-   - Ollama endpoint used: `http://localhost:11434/api/tags`
-   - Response: List of models available in your Ollama installation
+   ```javascript
+   import { Ollama } from 'ollama';
 
-2. **`/api/ollama`** - Sends requests to models and receives responses
-   - Method: `POST`
-   - Ollama endpoint used: `http://localhost:11434/api/chat`
-   - Request body:
-     ```json
-     {
-       "prompt": "Your message",
-       "model": "model-name",
-       "conversation": [
-         { "role": "user", "content": "Previous message" },
-         { "role": "assistant", "content": "Previous response" }
-       ]
-     }
-     ```
-   - Streaming: Uses Server-Sent Events (SSE) to stream the response in real-time
+   const ollama = new Ollama({
+   host: 'http://localhost:11434'
+   });
+   ```
+### API Endpoints
+
+1. `/api/ollama/models` Retrieves the list of available models
+
+- Method: `GET`
+- Uses: `ollama.list()`
+- Response: List of models available in your Ollama installation
+
+```javascript
+const response = await ollama.list();
+   // Returns: { models: [...] }
+```
+
+2. `/api/ollama` Sends requests to models and receives responses
+
+- Method: `POST`
+- Uses: `ollama.chat()`
+- Request body:
+
+```json
+{
+   "prompt": "Your message",
+   "model": "model-name",
+   "conversation": [
+   { "role": "user", "content": "Previous      message" },
+   { "role": "assistant", "content": "Previous response" }
+   ]
+}
+```
+
+3. `/api/ollama/pull` Downloads a new model
+
+- Method: `POST`
+- Uses: `ollama.pull()`
+- Response: List of models available in your Ollama installation
+
+```json
+{
+   "model": "llama3.1"
+}
+```
+
+4. `/api/ollama/ps` Lists currently running models
+
+- Method: `GET`
+- Uses: `ollama.ps()`
+- Response: List of models currently loaded in memory
+
+5. `/api/ollama/delete` Deletes an installed model
+
+- Method: `DELETE`
+- Uses: `ollama.delete()`
+- Request body:
+
+```json
+{
+   "model": "model-name"
+}
+```
 
 ### Streaming Implementation
-The project uses Next.js and browser streaming APIs to provide a real-time experience:
-
-1. The API creates a `TransformStream` on the server side
-2. The Ollama response is read progressively in chunks
-3. Each fragment is encoded and sent to the client via SSE (Server-Sent Events)
-4. The client decodes the events and updates the user interface in real-time
+Response streaming is enabled by setting `stream: true`, modifying function calls to return an AsyncGenerator where each part is an object in the stream.
 
 ```javascript
 // Excerpt from src/app/api/ollama/route.js
 const stream = new TransformStream();
 const writer = stream.writable.getWriter();
-// Background processing
-fetchOllamaResponseStreaming(prompt, model, conversation, writer, encoder);
+const encoder = new TextEncoder();
+
+// Use Ollama library with streaming
+const response = await ollama.chat({
+  model,
+  messages,
+  stream: true,
+});
+
+// Process the stream
+for await (const part of response) {
+  if (part.message?.content) {
+    await writer.write(
+      encoder.encode(`data: ${JSON.stringify({ token: part.message.content })}\n\n`)
+    );
+  }
+}
+
 // Returns a response stream
 return new Response(stream.readable, {
   headers: { 'Content-Type': 'text/event-stream' }
@@ -134,14 +191,13 @@ return new Response(stream.readable, {
 - **Next.js 15** - React framework
 - **React 19** - UI library
 - **Tailwind CSS** - Utility-first CSS framework
-- **Server-Sent Events** - For response streaming
 
 ## Troubleshooting
 ### Ollama Not Detected
 Make sure Ollama is running on `http://localhost:11434`. You can verify by visiting this URL in your browser.
 
 ### Models Not Available
-If no models appear in the selector, download one via [Ollama](https://ollama.com/search):
+If no models appear in the selector, download one via RaccoonAI or [Ollama](https://ollama.com/search):
 
 Example:
 ```bash
